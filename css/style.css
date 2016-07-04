@@ -32,8 +32,33 @@ label {
 	padding: 10px;
 }
 
-#serverUrl {
-	width: 225px;
+.server_row {
+	margin-bottom: 5px;
+}
+
+#urlHistory {
+	width: 500px;
+	padding: 1px 3px;
+	border: 1px solid #999;
+}
+
+#serverSchema {
+	width: 50px;
+	padding: 1px 3px;
+	border: 1px solid #999;
+}
+#serverHost {
+	width: 200px;
+	padding: 1px 3px;
+	border: 1px solid #999;
+}
+#serverPort {
+	width: 50px;
+	padding: 1px 3px;
+	border: 1px solid #999;
+}
+#serverParams {
+	width: 500px;
 	padding: 1px 3px;
 	border: 1px solid #999;
 }
@@ -50,7 +75,7 @@ label {
 }
 
 #messages {
-	height: 300px;
+	height: 500px;
 	margin: 5px 0;
 	padding: 0 5px;
 	overflow: auto;

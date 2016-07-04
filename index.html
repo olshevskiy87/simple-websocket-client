@@ -10,13 +10,22 @@
 <div id="content">
 	<fieldset>
 		<legend>Server Location</legend>
-		<div>
+		<div class="server_row">
+			<label>URL history:</label>
+			<select id="urlHistory">
+			</select>
+			<button id="loadButton">Load</button>
+		</div>
+		<div class="server_row">
 			<label>URL:</label>
-			<input type="text" id="serverUrl" value="ws://"/>
+			<input type="text" id="serverSchema" value="ws"/>
+			<input type="text" id="serverHost" value="localhost"/>
+			<input type="text" id="serverPort" value="80"/>
+			<input type="text" id="serverParams" value="id=123"/>
 			<button id="connectButton">Open</button>
 			<button id="disconnectButton">Close</button>
 		</div>
-		<div>
+		<div class="server_row">
 			<label>Status:</label>
 			<span id="connectionStatus">CLOSED</span>
 		</div>
@@ -36,7 +45,7 @@
 		<div id="messages"></div>
 	</fieldset>
 </div>
-<script type="text/javascript" src="lib/jquery-1.4.3.min.js"></script>
+<script type="text/javascript" src="lib/jquery.min.js"></script>
 <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

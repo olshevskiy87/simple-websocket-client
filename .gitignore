@@ -4,5 +4,8 @@
 .DS_Store
 *.tmproj
 *~
+*.sw[pno]
 /deletefile.list
 /.project
+TODO.md
+node_modules
