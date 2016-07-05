@@ -40,6 +40,19 @@
 		return url;
 	};
 
+	var getHistoryFromStorage = function() {
+		var stg_data = localStorage.getItem(STG_URL_HIST_KEY),
+			ret = {};
+		if (stg_data !== null) {
+			try {
+				ret = JSON.parse(stg_data);
+			} catch (e) {
+				console.log(e.message);
+			}
+		}
+		return ret;
+	};
+
 	var disableUrl = function() {
 		serverSchema.attr('disabled', 'disabled');
 		serverHost.attr('disabled',   'disabled');
@@ -94,15 +107,7 @@
 		localStorage.setItem(STG_URL_PORT_KEY,   serverPort.val());
 		localStorage.setItem(STG_URL_PARAMS_KEY, serverParams.val());
 
-		var stg_url_hist = localStorage.getItem(STG_URL_HIST_KEY),
-			url_hist = {};
-		if (stg_url_hist !== null) {
-			try {
-				url_hist = JSON.parse(stg_url_hist);
-			} catch (e) {
-				console.log(e.message);
-			}
-		}
+		var url_hist = getHistoryFromStorage();
 		url_hist[url] = {
 			schema: serverSchema.val(),
 			host:   serverHost.val(),
@@ -208,6 +213,7 @@
 			sendMessage      = $('#sendMessage');
 
 			loadButton       = $('#loadButton');
+			delButton        = $('#delButton');
 			connectButton    = $('#connectButton');
 			disconnectButton = $('#disconnectButton');
 			sendButton       = $('#sendButton');
@@ -217,15 +223,7 @@
 
 			loadButton.click(function(e) {
 				var url = urlHistory.val(),
-					stg_url_hist = localStorage.getItem(STG_URL_HIST_KEY),
-					url_hist = {};
-				if (stg_url_hist !== null) {
-					try {
-						url_hist = JSON.parse(stg_url_hist);
-					} catch (e) {
-						console.log(e.message);
-					}
-				}
+					url_hist = getHistoryFromStorage();
 				if (!(url in url_hist)) {
 					console.log('could not retrieve history item');
 				}
@@ -234,6 +232,17 @@
 				serverHost.val(url_data.host);
 				serverPort.val(url_data.port);
 				serverParams.val(url_data.params);
+				close();
+			});
+
+			delButton.click(function(e) {
+				var url = urlHistory.val(),
+					url_hist = getHistoryFromStorage();
+				if (url in url_hist) {
+					delete url_hist[url];
+				}
+				localStorage.setItem(STG_URL_HIST_KEY, JSON.stringify(url_hist));
+				updateSelectHistory();
 			});
 
 			connectButton.click(function(e) {
