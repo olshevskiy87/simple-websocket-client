@@ -10,8 +10,7 @@
 	var connectionStatus;
 	var sendMessage,
 		messages;
-	var loadButton,
-		connectButton,
+	var connectButton,
 		disconnectButton,
 		sendButton,
 		clearMsgButton;
@@ -212,7 +211,6 @@
 			connectionStatus = $('#connectionStatus');
 			sendMessage      = $('#sendMessage');
 
-			loadButton       = $('#loadButton');
 			delButton        = $('#delButton');
 			connectButton    = $('#connectButton');
 			disconnectButton = $('#disconnectButton');
@@ -221,7 +219,7 @@
 
 			messages         = $('#messages');
 
-			loadButton.click(function(e) {
+			urlHistory.change(function(e) {
 				var url = urlHistory.val(),
 					url_hist = getHistoryFromStorage();
 				if (!(url in url_hist)) {
