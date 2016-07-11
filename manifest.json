@@ -9,16 +9,11 @@
     "48":  "resources/icon_048.png",
     "128": "resources/icon_128.png"
   },
-
   "browser_action": {
     "default_icon": "resources/icon_032.png"
   },
-
   "options_page": "index.html",
-
   "background":{
     "scripts": [ "background.js" ]
-  },
-
-  "permissions": [ "tabs" ]
+  }
 }
