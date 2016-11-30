@@ -6,6 +6,7 @@
 		serverHost   = '',
 		serverPort   = '',
 		serverParams = '',
+		filterMessage = '',
 		urlHistory   = '';
 	var connectionStatus;
 	var sendMessage,
@@ -151,7 +152,11 @@
 	};
 
 	var onMessage = function(event) {
-		var data = event.data;
+		var data = event.data,
+			filterText = filterMessage.val();
+		if (filterText && data.indexOf(filterText) < 0) {
+			return false;
+		}
 		addMessage(data);
 	};
 
@@ -187,6 +192,7 @@
 			serverHost   = $('#serverHost');
 			serverPort   = $('#serverPort');
 			serverParams = $('#serverParams');
+			filterMessage = $('#filterMessage');
 			urlHistory   = $('#urlHistory');
 
 			updateSelectHistory();
