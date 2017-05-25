@@ -1,4 +1,11 @@
-.git
+.git/*
+.gitignore
 README.md
 RELEASE
+LICENSE.txt
+Makefile
 exclude.lst
+*.zip
+*.swp
+*.swn
+*.swo
