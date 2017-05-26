@@ -165,7 +165,7 @@
 	};
 
 	var addMessage = function(data, type) {
-		var msg = $('<pre>').text(data);
+		var msg = $('<pre>').text('[' + moment().format('YYYY-MM-DD HH:mm:ss') + '] ' + data);
 		if (type === 'SENT') {
 			msg.addClass('sent');
 		}
