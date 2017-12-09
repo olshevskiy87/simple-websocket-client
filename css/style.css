@@ -40,7 +40,7 @@ label {
 	margin-bottom: 5px;
 }
 
-#urlHistory {
+#urlHistory, #favorites {
 	width: 500px;
 	padding: 1px 3px;
 	border: 1px solid #999;
