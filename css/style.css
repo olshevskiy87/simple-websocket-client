@@ -1,103 +1,139 @@
+/* cyrillic-ext */
+@font-face {
+  font-family: 'PT Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Mono'), local('PTMono-Regular'), url(/fonts/PT_Mono_ext.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'PT Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Mono'), local('PTMono-Regular'), url(PT_Mono_ext.woff2) format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'PT Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Mono'), local('PTMono-Regular'), url(PT_Mono_ext.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'PT Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Mono'), local('PTMono-Regular'), url(PT_Mono.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+}
+
 body {
-	width: 100%;
-	font-family: font-family:'ÉqÉâÉMÉmäpÉS Pro W3','Hiragino Kaku Gothic Pro','ÉÅÉCÉäÉI',Meiryo,'ÇlÇr ÇoÉSÉVÉbÉN',sans-serif;
-	color: #000;
-	background-color: #eee;
-	font-size: 10pt;
+  width: 100%;
+  color: #000;
+  background-color: #eee;
+  font-size: 10pt;
+  overflow: hidden;
 }
 
 fieldset {
-	margin-bottom: 10px;
-	padding: 5px 10px;
-	border: 1px solid #777;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border: 1px solid #777;
 }
 
 legend {
-	padding: 0 5px;
-	color: #777;
-	font-size: 11pt;
-	font-weight: bold;
+  padding: 0 5px;
+  color: #777;
+  font-size: 11pt;
+  font-weight: bold;
 }
 
 label {
-	color: #777;
-	font-weight: bold;
+  color: #777;
+  font-weight: bold;
 }
 
 #connectionStatus {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 #content {
-	padding: 10px;
+  padding: 10px;
 }
 
 .server_row {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .filter_row {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 #urlHistory, #favorites {
-	width: 500px;
-	padding: 1px 3px;
-	border: 1px solid #999;
+  width: 500px;
+  padding: 1px 3px;
+  border: 1px solid #999;
 }
 
 #serverSchema {
-	width: 50px;
-	padding: 1px 3px;
-	border: 1px solid #999;
+  width: 50px;
+  padding: 1px 3px;
+  border: 1px solid #999;
 }
 #serverHost {
-	width: 200px;
-	padding: 1px 3px;
-	border: 1px solid #999;
+  width: 200px;
+  padding: 1px 3px;
+  border: 1px solid #999;
 }
 #serverPort {
-	width: 50px;
-	padding: 1px 3px;
-	border: 1px solid #999;
+  width: 50px;
+  padding: 1px 3px;
+  border: 1px solid #999;
 }
 #serverParams {
-	width: 500px;
-	padding: 1px 3px;
-	border: 1px solid #999;
+  width: 500px;
+  padding: 1px 3px;
+  border: 1px solid #999;
 }
 
 #filterMessage {
-	width: 700px;
-	border: 1px solid #999;
+  width: 700px;
+  border: 1px solid #999;
 }
 
 #disconnectButton {
-	display: none;
+  display: none;
 }
 
 #requestArea textarea {
-	min-width: 300px;
-	height: 2em;
-	padding: 0 3px;
-	line-height: 150%;
+  min-width: 300px;
+  height: 2em;
+  padding: 0 3px;
+  line-height: 150%;
 }
 
 #messages {
-	height: 500px;
-	margin: 5px 0;
-	padding: 0 5px;
-	overflow: auto;
-	border: 1px dotted #777;
-	background-color: #fff;
-	line-height: 150%;
+  width: calc(100vw - 45px);
+  height: 500px;
+  margin: 5px 0;
+  padding: 0 5px;
+  overflow: auto;
+  border: 1px dotted #777;
+  background-color: #fff;
+  line-height: 150%;
+  box-sizing: border-box;
 }
 
 #messages pre {
-	width: 100%;
-	color: #000;
+  width: 100%;
+  color: #000;
+  font-family: 'PTMono-Regular';
 }
 
 #messages pre.sent {
-	color: #f63;
+  color: #f63;
 }

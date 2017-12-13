@@ -10,7 +10,9 @@
         urlHistory   = '',
         favorites   = '',
         favDelButton   = '',
-        favAddButton   = '';
+        favAddButton   = '',
+        filterButton = '',
+        filterClearButton = '';
     var connectionStatus;
     var sendMessage,
         messages;
@@ -174,13 +176,13 @@
         console.log('ERROR: ' + event.data);
     };
 
-    var onFilter = function (event) {
+    var onFilter = function () {
         var filteredMessages = messages
             .find('pre')
             .each(function () {
                 var element = $(this);
 
-                if (element.html().indexOf(event.target.value) === -1) {
+                if (element.html().indexOf(filterMessage.val()) === -1) {
                     element.attr('hidden', true);
                 } else {
                     element.removeAttr('hidden');
@@ -249,16 +251,19 @@
             connectionStatus = $('#connectionStatus');
             sendMessage      = $('#sendMessage');
 
-            delButton        = $('#delButton');
-            favDelButton     = $('#favDelButton');
-            favAddButton     = $('#favAddButton');
-            connectButton    = $('#connectButton');
-            disconnectButton = $('#disconnectButton');
-            sendButton       = $('#sendButton');
-            clearMsgButton   = $('#clearMessage');
+            delButton         = $('#delButton');
+            favDelButton      = $('#favDelButton');
+            favAddButton      = $('#favAddButton');
+            connectButton     = $('#connectButton');
+            disconnectButton  = $('#disconnectButton');
+            sendButton        = $('#sendButton');
+            clearMsgButton    = $('#clearMessage');
 
-            favorites        = $('#favorites');
-            messages         = $('#messages');
+            filterButton      = $('#filterButton');
+            filterClearButton = $('#filterClearButton');
+
+            favorites         = $('#favorites');
+            messages          = $('#messages');
 
             urlHistory.change(function(e) {
                 var url = urlHistory.val(),
@@ -334,7 +339,17 @@
                 clearLog();
             });
 
-            filterMessage.on('input', onFilter);
+            filterButton.on('click', onFilter);
+            filterClearButton.on('click', function () {
+                filterMessage.val('');
+                messages.find('pre').removeAttr('hidden');
+
+            });
+            filterMessage.on('keypress', function (event) {
+                if (event.which === 13) {
+                    onFilter();
+                }
+            });
 
             var isCtrl;
             sendMessage.keyup(function (e) {
