@@ -2,15 +2,16 @@
     var ws = null;
     var connected = false;
 
-    var serverSchema  = '',
-        serverHost    = '',
-        serverPort    = '',
-        serverParams  = '',
-        filterMessage = '',
-        urlHistory    = '',
-        favorites     = '',
-        favDelButton  = '',
-        favAddButton  = '';
+    var serverSchema   = '',
+        serverHost     = '',
+        serverPort     = '',
+        serverParams   = '',
+        filterMessage  = '',
+        urlHistory     = '',
+        favorites      = '',
+        favApplyButton = '',
+        favDelButton   = '',
+        favAddButton   = '';
     var connectionStatus;
     var sendMessage,
         messages;
@@ -51,7 +52,7 @@
             try {
                 ret = JSON.parse(stg_data);
             } catch (e) {
-                console.log(e.message);
+                console.error('could not parse json from storage: ' + e.message);
             }
         }
         return ret;
@@ -171,7 +172,7 @@
     };
 
     var onError = function(event) {
-        console.log('ERROR: ' + event.data);
+        console.error('ERROR: ' + event.data);
     };
 
     var onFilter = function (event) {
@@ -216,6 +217,21 @@
         }
     };
 
+    var applyCurrentFavorite = function(e) {
+        var url = favorites.val(),
+            data = getDataFromStorage(true);
+        if (!(url in data)) {
+            console.warn('could not retrieve favorites item');
+            return;
+        }
+        var url_data = data[url];
+        serverSchema.val(url_data.schema);
+        serverHost.val(url_data.host);
+        serverPort.val(url_data.port);
+        serverParams.val(url_data.params);
+        close();
+    };
+
     WebSocketClient = {
         init: function() {
             serverSchema  = $('#serverSchema');
@@ -250,6 +266,7 @@
             sendMessage      = $('#sendMessage');
 
             delButton        = $('#delButton');
+            favApplyButton   = $('#favApplyButton');
             favDelButton     = $('#favDelButton');
             favAddButton     = $('#favAddButton');
             connectButton    = $('#connectButton');
@@ -264,7 +281,7 @@
                 var url = urlHistory.val(),
                     url_hist = getDataFromStorage();
                 if (!(url in url_hist)) {
-                    console.log('could not retrieve history item');
+                    console.warn('could not retrieve history item');
                 }
                 var url_data = url_hist[url];
                 serverSchema.val(url_data.schema);
@@ -274,19 +291,7 @@
                 close();
             });
 
-            favorites.change(function(e) {
-                var url = favorites.val(),
-                    data = getDataFromStorage(true);
-                if (!(url in data)) {
-                    console.log('could not retrieve favorites item');
-                }
-                var url_data = data[url];
-                serverSchema.val(url_data.schema);
-                serverHost.val(url_data.host);
-                serverPort.val(url_data.port);
-                serverParams.val(url_data.params);
-                close();
-            });
+            favorites.change(applyCurrentFavorite);
 
             delButton.click(function(e) {
                 var url = urlHistory.val(),
@@ -306,6 +311,10 @@
                 }
                 localStorage.setItem(STG_URL_FAV_KEY, JSON.stringify(fav));
                 updateSelect(true);
+            });
+
+            favApplyButton.click(function(e) {
+                applyCurrentFavorite();
             });
 
             favAddButton.click(function(e) {
