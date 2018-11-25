@@ -189,7 +189,10 @@
     };
 
     var onError = function(event) {
-        console.error('ERROR: ' + event.data);
+        if (event.data !== undefined) {
+            console.error('ERROR: ' + event.data);
+        }
+        close();
     };
 
     var onFilter = function (event) {
@@ -304,6 +307,7 @@
                     url_hist = getDataFromStorage();
                 if (!(url in url_hist)) {
                     console.warn('could not retrieve history item');
+                    return;
                 }
                 var url_data = url_hist[url];
                 serverSchema.val(url_data.schema);
