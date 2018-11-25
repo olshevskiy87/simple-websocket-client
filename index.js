@@ -7,6 +7,7 @@
         serverPort     = '',
         serverParams   = '',
         filterMessage  = '',
+        binaryType     = '',
         urlHistory     = '',
         favorites      = '',
         favApplyButton = '',
@@ -26,12 +27,18 @@
         STG_URL_HOST_KEY   = 'ext_swc_host',
         STG_URL_PORT_KEY   = 'ext_swc_port',
         STG_URL_PARAMS_KEY = 'ext_swc_params';
+        STG_BIN_TYPE_KEY   = 'ext_swc_bintype';
+
+    var isBinaryTypeArrayBuffer = function() {
+        return binaryType.val() == 'arraybuffer';
+    }
 
     var enableUrl = function() {
         serverSchema.removeAttr('disabled');
         serverHost.removeAttr('disabled');
         serverPort.removeAttr('disabled');
         serverParams.removeAttr('disabled');
+        binaryType.removeAttr('disabled');
     };
 
     var getUrl = function() {
@@ -63,10 +70,11 @@
         var url = getUrl();
 
         data[url] = {
-            schema: serverSchema.val(),
-            host:   serverHost.val(),
-            port:   serverPort.val(),
-            params: serverParams.val(),
+            schema:     serverSchema.val(),
+            host:       serverHost.val(),
+            port:       serverPort.val(),
+            params:     serverParams.val(),
+            binaryType: binaryType.val(),
         };
         localStorage.setItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY, JSON.stringify(data));
     };
@@ -76,6 +84,7 @@
         serverHost.attr('disabled',   'disabled');
         serverPort.attr('disabled',   'disabled');
         serverParams.attr('disabled', 'disabled');
+        binaryType.attr('disabled',   'disabled');
     };
 
     var enableConnectButton = function() {
@@ -113,6 +122,9 @@
     var open = function() {
         var url = getUrl();
         ws = new WebSocket(url);
+        if (isBinaryTypeArrayBuffer()) {
+            ws.binaryType = 'arraybuffer';
+        }
         ws.onopen    = onOpen;
         ws.onclose   = onClose;
         ws.onmessage = onMessage;
@@ -128,6 +140,7 @@
         localStorage.setItem(STG_URL_HOST_KEY,   serverHost.val());
         localStorage.setItem(STG_URL_PORT_KEY,   serverPort.val());
         localStorage.setItem(STG_URL_PARAMS_KEY, serverParams.val());
+        localStorage.setItem(STG_BIN_TYPE_KEY,   binaryType.val());
 
         updateDataInStorage();
         updateSelect();
@@ -168,6 +181,10 @@
 
     var onMessage = function(event) {
         var data = event.data;
+        if (isBinaryTypeArrayBuffer()) {
+            var buffer = new Uint8Array(data);
+            data = new TextDecoder().decode(buffer).slice(1);
+        }
         addMessage(data);
     };
 
@@ -229,6 +246,7 @@
         serverHost.val(url_data.host);
         serverPort.val(url_data.port);
         serverParams.val(url_data.params);
+        binaryType.val(url_data.binaryType);
         close();
     };
 
@@ -238,6 +256,7 @@
             serverHost    = $('#serverHost');
             serverPort    = $('#serverPort');
             serverParams  = $('#serverParams');
+            binaryType    = $('#binaryType');
             filterMessage = $('#filterMessage');
             urlHistory    = $('#urlHistory');
             favorites     = $('#favorites');
@@ -261,6 +280,10 @@
             if (stg_url_params !== null) {
                 serverParams.val(stg_url_params);
             }
+            var stg_bin_type = localStorage.getItem(STG_BIN_TYPE_KEY);
+            if (stg_bin_type !== null) {
+                binaryType.val(stg_bin_type);
+            }
 
             connectionStatus = $('#connectionStatus');
             sendMessage      = $('#sendMessage');
@@ -274,7 +297,6 @@
             sendButton       = $('#sendButton');
             clearMsgButton   = $('#clearMessage');
 
-            favorites        = $('#favorites');
             messages         = $('#messages');
 
             urlHistory.change(function(e) {
@@ -288,6 +310,7 @@
                 serverHost.val(url_data.host);
                 serverPort.val(url_data.port);
                 serverParams.val(url_data.params);
+                binaryType.val(url_data.binaryType);
                 close();
             });
 
