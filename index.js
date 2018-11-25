@@ -2,15 +2,15 @@
     var ws = null;
     var connected = false;
 
-    var serverSchema = '',
-        serverHost   = '',
-        serverPort   = '',
-        serverParams = '',
+    var serverSchema  = '',
+        serverHost    = '',
+        serverPort    = '',
+        serverParams  = '',
         filterMessage = '',
-        urlHistory   = '',
-        favorites   = '',
-        favDelButton   = '',
-        favAddButton   = '';
+        urlHistory    = '',
+        favorites     = '',
+        favDelButton  = '',
+        favAddButton  = '';
     var connectionStatus;
     var sendMessage,
         messages;
@@ -201,7 +201,7 @@
         }
         var messages = $('#messages');
         messages.append(msg);
-        
+
         var msgBox = messages.get(0);
         while (msgBox.childNodes.length > MAX_LINES_COUNT) {
             msgBox.removeChild(msgBox.firstChild);
@@ -218,13 +218,13 @@
 
     WebSocketClient = {
         init: function() {
-            serverSchema = $('#serverSchema');
-            serverHost   = $('#serverHost');
-            serverPort   = $('#serverPort');
-            serverParams = $('#serverParams');
+            serverSchema  = $('#serverSchema');
+            serverHost    = $('#serverHost');
+            serverPort    = $('#serverPort');
+            serverParams  = $('#serverParams');
             filterMessage = $('#filterMessage');
-            urlHistory   = $('#urlHistory');
-            favorites = $('#favorites');
+            urlHistory    = $('#urlHistory');
+            favorites     = $('#favorites');
 
             updateSelect();
             updateSelect(true, true);
