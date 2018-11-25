@@ -237,6 +237,24 @@
         }
     };
 
+    var applyUrlData = function(data) {
+        if (data.schema !== undefined) {
+            serverSchema.val(data.schema);
+        }
+        if (data.host !== undefined) {
+            serverHost.val(data.host);
+        }
+        if (data.port !== undefined) {
+            serverPort.val(data.port);
+        }
+        if (data.params !== undefined) {
+            serverParams.val(data.params);
+        }
+        if (data.binaryType !== undefined) {
+            binaryType.val(data.binaryType);
+        }
+    };
+
     var applyCurrentFavorite = function(e) {
         var url = favorites.val(),
             data = getDataFromStorage(true);
@@ -244,12 +262,7 @@
             console.warn('could not retrieve favorites item');
             return;
         }
-        var url_data = data[url];
-        serverSchema.val(url_data.schema);
-        serverHost.val(url_data.host);
-        serverPort.val(url_data.port);
-        serverParams.val(url_data.params);
-        binaryType.val(url_data.binaryType);
+        applyUrlData(data[url]);
         close();
     };
 
@@ -309,12 +322,7 @@
                     console.warn('could not retrieve history item');
                     return;
                 }
-                var url_data = url_hist[url];
-                serverSchema.val(url_data.schema);
-                serverHost.val(url_data.host);
-                serverPort.val(url_data.port);
-                serverParams.val(url_data.params);
-                binaryType.val(url_data.binaryType);
+                applyUrlData(url_hist[url]);
                 close();
             });
 
