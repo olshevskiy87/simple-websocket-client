@@ -5,6 +5,7 @@
     var serverSchema   = '',
         serverHost     = '',
         serverPort     = '',
+        serverPath     = '',
         serverParams   = '',
         filterMessage  = '',
         binaryType     = '',
@@ -26,6 +27,7 @@
         STG_URL_SCHEMA_KEY = 'ext_swc_schema',
         STG_URL_HOST_KEY   = 'ext_swc_host',
         STG_URL_PORT_KEY   = 'ext_swc_port',
+        STG_URL_PATH_KEY   = 'ext_swc_path';
         STG_URL_PARAMS_KEY = 'ext_swc_params';
         STG_BIN_TYPE_KEY   = 'ext_swc_bintype';
 
@@ -37,6 +39,7 @@
         serverSchema.removeAttr('disabled');
         serverHost.removeAttr('disabled');
         serverPort.removeAttr('disabled');
+        serverPath.removeAttr('disabled');
         serverParams.removeAttr('disabled');
         binaryType.removeAttr('disabled');
     };
@@ -45,6 +48,9 @@
         var url = serverSchema.val() + '://' + serverHost.val();
         if (serverPort.val()) {
             url += ':' + serverPort.val();
+        }
+        if (serverPath.val()) {
+            url += '/' + serverPath.val();
         }
         if (serverParams.val()) {
             url += '?' + serverParams.val();
@@ -73,6 +79,7 @@
             schema:     serverSchema.val(),
             host:       serverHost.val(),
             port:       serverPort.val(),
+            path:       serverPath.val(),
             params:     serverParams.val(),
             binaryType: binaryType.val(),
         };
@@ -83,6 +90,7 @@
         serverSchema.attr('disabled', 'disabled');
         serverHost.attr('disabled',   'disabled');
         serverPort.attr('disabled',   'disabled');
+        serverPath.attr('disabled',   'disabled');
         serverParams.attr('disabled', 'disabled');
         binaryType.attr('disabled',   'disabled');
     };
@@ -139,6 +147,7 @@
         localStorage.setItem(STG_URL_SCHEMA_KEY, serverSchema.val());
         localStorage.setItem(STG_URL_HOST_KEY,   serverHost.val());
         localStorage.setItem(STG_URL_PORT_KEY,   serverPort.val());
+        localStorage.setItem(STG_URL_PATH_KEY,   serverPath.val());
         localStorage.setItem(STG_URL_PARAMS_KEY, serverParams.val());
         localStorage.setItem(STG_BIN_TYPE_KEY,   binaryType.val());
 
@@ -247,6 +256,9 @@
         if (data.port !== undefined) {
             serverPort.val(data.port);
         }
+        if (data.path !== undefined) {
+            serverPath.val(data.path);
+        }
         if (data.params !== undefined) {
             serverParams.val(data.params);
         }
@@ -271,6 +283,7 @@
             serverSchema  = $('#serverSchema');
             serverHost    = $('#serverHost');
             serverPort    = $('#serverPort');
+            serverPath    = $('#serverPath');
             serverParams  = $('#serverParams');
             binaryType    = $('#binaryType');
             filterMessage = $('#filterMessage');
@@ -291,6 +304,10 @@
             var stg_url_port = localStorage.getItem(STG_URL_PORT_KEY);
             if (stg_url_port !== null) {
                 serverPort.val(stg_url_port);
+            }
+            var stg_url_path = localStorage.getItem(STG_URL_PATH_KEY);
+            if (stg_url_path !== null) {
+                serverPath.val(stg_url_path);
             }
             var stg_url_params = localStorage.getItem(STG_URL_PARAMS_KEY);
             if (stg_url_params !== null) {
@@ -393,6 +410,7 @@
             serverSchema.keydown(urlKeyDown);
             serverHost.keydown(urlKeyDown);
             serverPort.keydown(urlKeyDown);
+            serverPath.keydown(urlKeyDown);
             serverParams.keydown(urlKeyDown);
         }
     };

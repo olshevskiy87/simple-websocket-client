@@ -61,8 +61,13 @@ label {
     padding: 1px 3px;
     border: 1px solid #999;
 }
+#serverPath {
+    width: 300px;
+    padding: 1px 3px;
+    border: 1px solid #999;
+}
 #serverParams {
-    width: 500px;
+    width: 300px;
     padding: 1px 3px;
     border: 1px solid #999;
 }
