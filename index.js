@@ -30,6 +30,7 @@
         STG_URL_PATH_KEY   = 'ext_swc_path';
         STG_URL_PARAMS_KEY = 'ext_swc_params';
         STG_BIN_TYPE_KEY   = 'ext_swc_bintype';
+        STG_REQUEST_KEY    = 'ext_swc_request';
 
     var isBinaryTypeArrayBuffer = function() {
         return binaryType.val() == 'arraybuffer';
@@ -290,6 +291,20 @@
             urlHistory    = $('#urlHistory');
             favorites     = $('#favorites');
 
+            connectionStatus = $('#connectionStatus');
+            sendMessage      = $('#sendMessage');
+
+            delButton        = $('#delButton');
+            favApplyButton   = $('#favApplyButton');
+            favDelButton     = $('#favDelButton');
+            favAddButton     = $('#favAddButton');
+            connectButton    = $('#connectButton');
+            disconnectButton = $('#disconnectButton');
+            sendButton       = $('#sendButton');
+            clearMsgButton   = $('#clearMessage');
+
+            messages         = $('#messages');
+
             updateSelect();
             updateSelect(true, true);
 
@@ -317,20 +332,10 @@
             if (stg_bin_type !== null) {
                 binaryType.val(stg_bin_type);
             }
-
-            connectionStatus = $('#connectionStatus');
-            sendMessage      = $('#sendMessage');
-
-            delButton        = $('#delButton');
-            favApplyButton   = $('#favApplyButton');
-            favDelButton     = $('#favDelButton');
-            favAddButton     = $('#favAddButton');
-            connectButton    = $('#connectButton');
-            disconnectButton = $('#disconnectButton');
-            sendButton       = $('#sendButton');
-            clearMsgButton   = $('#clearMessage');
-
-            messages         = $('#messages');
+            var stg_request = localStorage.getItem(STG_REQUEST_KEY);
+            if (stg_request !== null) {
+                sendMessage.val(stg_request);
+            }
 
             urlHistory.change(function(e) {
                 var url = urlHistory.val(),
@@ -389,6 +394,7 @@
                 var msg = sendMessage.val();
                 addMessage(msg, 'SENT');
                 ws.send(msg);
+                localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
             });
 
             clearMsgButton.click(function(e) {
