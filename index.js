@@ -13,7 +13,8 @@
         favorites      = '',
         favApplyButton = '',
         favDelButton   = '',
-        favAddButton   = '';
+        favAddButton   = '',
+        showMsgTsMilliseconds = '';
     var connectionStatus;
     var sendMessage,
         messages;
@@ -31,6 +32,7 @@
         STG_URL_PARAMS_KEY = 'ext_swc_params';
         STG_BIN_TYPE_KEY   = 'ext_swc_bintype';
         STG_REQUEST_KEY    = 'ext_swc_request';
+        STG_MSG_TS_MS_KEY  = 'ext_swc_msg_ts_ms';
 
     var isBinaryTypeArrayBuffer = function() {
         return binaryType.val() == 'arraybuffer';
@@ -220,7 +222,11 @@
     };
 
     var addMessage = function(data, type) {
-        var msg = $('<pre>').text('[' + moment().format('YYYY-MM-DD HH:mm:ss') + '] ' + data);
+        var msgTimestampFormat = 'YYYY-MM-DD HH:mm:ss'
+        if (showMsgTsMilliseconds.is(':checked')) {
+            msgTimestampFormat += '.SSS';
+        }
+        var msg = $('<pre>').text('[' + moment().format(msgTimestampFormat) + '] ' + data);
         var filterValue = filterMessage.val();
 
         if (filterValue && data.indexOf(filterValue) === -1) {
@@ -302,6 +308,7 @@
             disconnectButton = $('#disconnectButton');
             sendButton       = $('#sendButton');
             clearMsgButton   = $('#clearMessage');
+            showMsgTsMilliseconds = $('#showMsgTsMilliseconds');
 
             messages         = $('#messages');
 
@@ -335,6 +342,10 @@
             var stg_request = localStorage.getItem(STG_REQUEST_KEY);
             if (stg_request !== null) {
                 sendMessage.val(stg_request);
+            }
+            var stg_msg_ts_ms = localStorage.getItem(STG_MSG_TS_MS_KEY);
+            if (stg_msg_ts_ms !== null && stg_msg_ts_ms === 'true') {
+                showMsgTsMilliseconds.prop('checked', true);
             }
 
             urlHistory.change(function(e) {
@@ -413,6 +424,11 @@
                     return false;
                 }
             });
+
+            showMsgTsMilliseconds.change(function() {
+                localStorage.setItem(STG_MSG_TS_MS_KEY, showMsgTsMilliseconds.is(':checked'));
+            });
+
             serverSchema.keydown(urlKeyDown);
             serverHost.keydown(urlKeyDown);
             serverPort.keydown(urlKeyDown);
