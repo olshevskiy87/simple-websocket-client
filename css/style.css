@@ -78,6 +78,13 @@ label {
 
 #filterMessage {
     width: 700px;
+    padding: 1px 3px;
+    border: 1px solid #999;
+}
+
+#lastMsgsNum {
+    width: 50px;
+    padding: 1px 3px;
     border: 1px solid #999;
 }
 

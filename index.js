@@ -8,6 +8,7 @@
         serverPath     = '',
         serverParams   = '',
         filterMessage  = '',
+        lastMsgsNum    = '',
         binaryType     = '',
         urlHistory     = '',
         favorites      = '',
@@ -33,6 +34,8 @@
         STG_BIN_TYPE_KEY   = 'ext_swc_bintype';
         STG_REQUEST_KEY    = 'ext_swc_request';
         STG_MSG_TS_MS_KEY  = 'ext_swc_msg_ts_ms';
+        STG_MSGS_NUM_KEY   = 'ext_swc_msgs_num';
+    var lastMsgsNumCur = MAX_LINES_COUNT;
 
     var isBinaryTypeArrayBuffer = function() {
         return binaryType.val() == 'arraybuffer';
@@ -131,6 +134,12 @@
     };
 
     var open = function() {
+        lastMsgsNumCur = MAX_LINES_COUNT;
+        var lastMsgsNumParsed = parseInt(lastMsgsNum.val(), 10);
+        if (!isNaN(lastMsgsNumParsed)) {
+            lastMsgsNumCur = lastMsgsNumParsed;
+        }
+
         var url = getUrl();
         ws = new WebSocket(url);
         if (isBinaryTypeArrayBuffer()) {
@@ -153,6 +162,7 @@
         localStorage.setItem(STG_URL_PATH_KEY,   serverPath.val());
         localStorage.setItem(STG_URL_PARAMS_KEY, serverParams.val());
         localStorage.setItem(STG_BIN_TYPE_KEY,   binaryType.val());
+        localStorage.setItem(STG_MSGS_NUM_KEY,   lastMsgsNum.val());
 
         updateDataInStorage();
         updateSelect();
@@ -172,6 +182,7 @@
         disableConnectButton();
         sendMessage.attr('disabled', 'disabled');
         sendButton.attr('disabled', 'disabled');
+        lastMsgsNum.removeAttr('disabled');
     };
 
     var clearLog = function() {
@@ -185,6 +196,7 @@
         connectionStatus.text('OPENED');
         sendMessage.removeAttr('disabled');
         sendButton.removeAttr('disabled');
+        lastMsgsNum.attr('disabled', 'disabled');
     };
 
     var onClose = function(event) {
@@ -240,7 +252,7 @@
         messages.append(msg);
 
         var msgBox = messages.get(0);
-        while (msgBox.childNodes.length > MAX_LINES_COUNT) {
+        while (msgBox.childNodes.length > lastMsgsNumCur) {
             msgBox.removeChild(msgBox.firstChild);
         }
         msgBox.scrollTop = msgBox.scrollHeight;
@@ -294,6 +306,7 @@
             serverParams  = $('#serverParams');
             binaryType    = $('#binaryType');
             filterMessage = $('#filterMessage');
+            lastMsgsNum   = $('#lastMsgsNum');
             urlHistory    = $('#urlHistory');
             favorites     = $('#favorites');
 
@@ -346,6 +359,10 @@
             var stg_msg_ts_ms = localStorage.getItem(STG_MSG_TS_MS_KEY);
             if (stg_msg_ts_ms !== null && stg_msg_ts_ms === 'true') {
                 showMsgTsMilliseconds.prop('checked', true);
+            }
+            var stg_msgs_num = localStorage.getItem(STG_MSGS_NUM_KEY);
+            if (stg_msgs_num !== null) {
+                lastMsgsNum.val(stg_msgs_num);
             }
 
             urlHistory.change(function(e) {
