@@ -15,9 +15,9 @@ https://chrome.google.com/webstore/detail/simple-websocket-client/gobngblklhkgmj
 Contributors
 ------------
 
-Kazuyuki Honda ([hakobera](https://github.com/hakobera))
-Dmitriy Olshevskiy ([olshevskiy87](https://github.com/olshevskiy87))
-Maksim Karelov ([Ty3uK](https://github.com/Ty3uK))
+- Kazuyuki Honda ([hakobera](https://github.com/hakobera))
+- Dmitriy Olshevskiy ([olshevskiy87](https://github.com/olshevskiy87))
+- Maksim Karelov ([Ty3uK](https://github.com/Ty3uK))
 
 License
 -------
