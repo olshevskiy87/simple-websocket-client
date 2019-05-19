@@ -107,6 +107,9 @@ label {
     border: 1px dotted #777;
     background-color: #fff;
     line-height: 150%;
+    overflow: scroll;
+    resize: vertical;
+    width: calc(100vw - 54px);
 }
 
 #messages pre {
