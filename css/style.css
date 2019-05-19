@@ -1,4 +1,5 @@
 body {
+    margin: 0;
     width: 100%;
     font-family: font-family:'ÉqÉâÉMÉmäpÉS Pro W3','Hiragino Kaku Gothic Pro','ÉÅÉCÉäÉI',Meiryo,'ÇlÇr ÇoÉSÉVÉbÉN',sans-serif;
     color: #000;
@@ -7,7 +8,7 @@ body {
 }
 
 fieldset {
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
     padding: 5px 10px;
     border: 1px solid #777;
 }
@@ -33,11 +34,11 @@ label {
 }
 
 .server_row {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .filter_row {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .toggle_milliseconds_row {
@@ -101,7 +102,6 @@ label {
 
 #messages {
     height: 500px;
-    margin: 5px 0;
     padding: 0 5px;
     overflow: auto;
     border: 1px dotted #777;
@@ -110,6 +110,7 @@ label {
 }
 
 #messages pre {
+    margin: 0;
     width: 100%;
     color: #000;
 }
