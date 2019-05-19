@@ -64,6 +64,21 @@
         return url;
     };
 
+    var getNowDateStr = function() {
+        var now = new Date();
+        String(now.getDate()).padStart(2, "0");
+        var res = now.getFullYear()
+            + '-' + String(now.getMonth() + 1).padStart(2, "0")
+            + '-' + String(now.getDate()).padStart(2, "0")
+            + ' ' + String(now.getHours()).padStart(2, "0")
+            + ':' + String(now.getMinutes()).padStart(2, "0")
+            + ':' + String(now.getSeconds()).padStart(2, "0");
+        if (showMsgTsMilliseconds.is(':checked')) {
+            res += '.' + String(now.getMilliseconds()).padStart(3, "0");
+        }
+        return res;
+    }
+
     var getDataFromStorage = function(isFavorites) {
         var stg_data = localStorage.getItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY),
             ret = {};
@@ -234,11 +249,7 @@
     };
 
     var addMessage = function(data, type) {
-        var msgTimestampFormat = 'YYYY-MM-DD HH:mm:ss'
-        if (showMsgTsMilliseconds.is(':checked')) {
-            msgTimestampFormat += '.SSS';
-        }
-        var msg = $('<pre>').text('[' + moment().format(msgTimestampFormat) + '] ' + data);
+        var msg = $('<pre>').text('[' + getNowDateStr() + '] ' + data);
         var filterValue = filterMessage.val();
 
         if (filterValue && data.indexOf(filterValue) === -1) {
@@ -433,10 +444,14 @@
 
             var isCtrl;
             sendMessage.keyup(function (e) {
-                if(e.which == 17) isCtrl=false;
+                if (e.which == 17) {
+                    isCtrl = false;
+                }
             }).keydown(function (e) {
-                if(e.which == 17) isCtrl=true;
-                if(e.which == 13 && isCtrl === true) {
+                if (e.which == 17) {
+                    isCtrl = true;
+                }
+                if (e.which == 13 && isCtrl === true) {
                     sendButton.click();
                     return false;
                 }
