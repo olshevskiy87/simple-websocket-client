@@ -259,7 +259,6 @@
         if (type === 'SENT') {
             msg.addClass('sent');
         }
-        var messages = $('#messages');
         messages.append(msg);
 
         var msgBox = messages.get(0);
@@ -409,9 +408,7 @@
                 updateSelect(true);
             });
 
-            favApplyButton.click(function(e) {
-                applyCurrentFavorite();
-            });
+            favApplyButton.click(applyCurrentFavorite);
 
             favAddButton.click(function(e) {
                 updateDataInStorage(true);
@@ -425,9 +422,7 @@
                 open();
             });
 
-            disconnectButton.click(function(e) {
-                close();
-            });
+            disconnectButton.click(close);
 
             sendButton.click(function(e) {
                 var msg = sendMessage.val();
@@ -436,24 +431,13 @@
                 localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
             });
 
-            clearMsgButton.click(function(e) {
-                clearLog();
-            });
+            clearMsgButton.click(clearLog);
 
             filterMessage.on('input', onFilter);
 
-            var isCtrl;
-            sendMessage.keyup(function (e) {
-                if (e.which == 17) {
-                    isCtrl = false;
-                }
-            }).keydown(function (e) {
-                if (e.which == 17) {
-                    isCtrl = true;
-                }
-                if (e.which == 13 && isCtrl === true) {
+            sendMessage.keydown(function (e) {
+                if (e.which == 13 && e.ctrlKey) {
                     sendButton.click();
-                    return false;
                 }
             });
 
