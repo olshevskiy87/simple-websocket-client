@@ -18,7 +18,9 @@
         showMsgTsMilliseconds = '';
     var connectionStatus;
     var sendMessage,
-        messages;
+        messages,
+        viewMessage,
+        viewMessageChk;
     var connectButton,
         disconnectButton,
         sendButton,
@@ -202,6 +204,8 @@
 
     var clearLog = function() {
         messages.html('');
+        viewMessage.html('');
+        hideViewMessagePanel();
     };
 
     var onOpen = function() {
@@ -248,8 +252,32 @@
             });
     };
 
+    var messageClickHandler = function (event) {
+        if (!event.ctrlKey) {
+            return;
+        }
+        viewMessage.text('');
+        try {
+            var data_decoded = JSON.parse(
+                $(this).html().replace(/^\[[^\]]+?\]\s*/, '')
+            );
+        } catch (e) {
+            console.error('could not parse json: ' + e.message);
+        }
+        showViewMessagePanel();
+        viewMessage.text(
+            JSON.stringify(data_decoded, null, 2)
+        );
+
+        messages.find('pre').each(function () {
+            $(this).css('background-color', '#ffffff');
+        });
+        $(this).css('background-color', '#eeeeee');
+    };
+
     var addMessage = function(data, type) {
         var msg = $('<pre>').text('[' + getNowDateStr() + '] ' + data);
+        msg.click(messageClickHandler);
         var filterValue = filterMessage.val();
 
         if (filterValue && data.indexOf(filterValue) === -1) {
@@ -307,6 +335,32 @@
         close();
     };
 
+    var showViewMessagePanel = function() {
+        if (viewMessage.is(':visible')) {
+            return;
+        }
+        messages.css('width', 'calc(70vw - 54px)');
+        viewMessage.attr('class', 'viewMessageVisible');
+        viewMessageChk.prop('checked', true);
+    };
+
+    var hideViewMessagePanel = function() {
+        if (viewMessage.is(':hidden')) {
+            return;
+        }
+        messages.css('width', 'calc(100vw - 54px)');
+        viewMessage.attr('class', 'viewMessageHidden');
+        viewMessageChk.prop('checked', false);
+    };
+
+    var viewMessageToggle = function() {
+        if ($(this).is(':checked')) {
+            showViewMessagePanel();
+        } else {
+            hideViewMessagePanel();
+        }
+    };
+
     WebSocketClient = {
         init: function() {
             serverSchema  = $('#serverSchema');
@@ -332,8 +386,10 @@
             sendButton       = $('#sendButton');
             clearMsgButton   = $('#clearMessage');
             showMsgTsMilliseconds = $('#showMsgTsMilliseconds');
+            viewMessageChk   = $('#viewMessageChk');
 
             messages         = $('#messages');
+            viewMessage      = $('#viewMessage');
 
             updateSelect();
             updateSelect(true, true);
@@ -450,6 +506,8 @@
             serverPort.keydown(urlKeyDown);
             serverPath.keydown(urlKeyDown);
             serverParams.keydown(urlKeyDown);
+
+            viewMessageChk.change(viewMessageToggle);
         }
     };
 })();

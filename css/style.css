@@ -45,6 +45,11 @@ label {
     margin-bottom: 5px;
 }
 
+.toggle_view_message_row {
+    margin-bottom: 5px;
+    float: right;
+}
+
 #urlHistory, #favorites {
     width: 500px;
     padding: 1px 3px;
@@ -110,6 +115,7 @@ label {
     overflow: scroll;
     resize: vertical;
     width: calc(100vw - 54px);
+    float: left;
 }
 
 #messages pre {
@@ -120,4 +126,22 @@ label {
 
 #messages pre.sent {
     color: #f63;
+}
+
+.viewMessageVisible {
+    height: 500px;
+    padding: 0 5px;
+    overflow: auto;
+    border: 1px dotted #777;
+    background-color: #fff;
+    line-height: 150%;
+    overflow: scroll;
+    resize: vertical;
+    width: calc(30vw - 30px);
+    float: right;
+    white-space: pre;
+    font-family: monospace;
+}
+.viewMessageHidden {
+    display: none;
 }
