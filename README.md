@@ -10,6 +10,8 @@ Extension URL
 
 https://chrome.google.com/webstore/detail/simple-websocket-client/gobngblklhkgmjhbpbdlkglbhhlafjnh
 
+<img alt="screenshot" src="./resources/screenshot.png" width="500">
+
 Contributors
 ------------
 

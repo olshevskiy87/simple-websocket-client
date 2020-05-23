@@ -12,3 +12,4 @@ exclude.lst
 *.swo
 package*.json
 .eslintrc.json
+resources/screenshot.png
