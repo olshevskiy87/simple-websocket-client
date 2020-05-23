@@ -1,0 +1,27 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "jquery": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly",
+        "chrome": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 11
+    },
+    "rules": {
+        "indent": ["error", 4],
+        "func-names": ["error", "never"],
+        "no-console": "off",
+        "max-len": ["error", {"code": 120, "comments": 120}],
+        "guard-for-in": "off",
+        "no-restricted-syntax": "off"
+    }
+}

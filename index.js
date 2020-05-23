@@ -1,517 +1,514 @@
-(function() {
-    var ws = null;
-    var connected = false;
+let ws = null;
 
-    var serverSchema   = '',
-        serverHost     = '',
-        serverPort     = '',
-        serverPath     = '',
-        serverParams   = '',
-        filterMessage  = '',
-        lastMsgsNum    = '',
-        binaryType     = '',
-        urlHistory     = '',
-        favorites      = '',
-        favApplyButton = '',
-        favDelButton   = '',
-        favAddButton   = '',
-        showMsgTsMilliseconds = '';
-    var connectionStatus;
-    var sendMessage,
-        messages,
-        viewMessage,
-        viewMessageChk;
-    var connectButton,
-        disconnectButton,
-        sendButton,
-        clearMsgButton;
-    var MAX_LINES_COUNT    = 1000,
-        STG_URL_HIST_KEY   = 'ext_swc_url_history',
-        STG_URL_FAV_KEY    = 'ext_swc_favorites',
-        STG_URL_SCHEMA_KEY = 'ext_swc_schema',
-        STG_URL_HOST_KEY   = 'ext_swc_host',
-        STG_URL_PORT_KEY   = 'ext_swc_port',
-        STG_URL_PATH_KEY   = 'ext_swc_path';
-        STG_URL_PARAMS_KEY = 'ext_swc_params';
-        STG_BIN_TYPE_KEY   = 'ext_swc_bintype';
-        STG_REQUEST_KEY    = 'ext_swc_request';
-        STG_MSG_TS_MS_KEY  = 'ext_swc_msg_ts_ms';
-        STG_MSGS_NUM_KEY   = 'ext_swc_msgs_num';
-    var lastMsgsNumCur = MAX_LINES_COUNT;
+let serverSchema = '';
+let serverHost = '';
+let serverPort = '';
+let serverPath = '';
+let serverParams = '';
+let filterMessage = '';
+let lastMsgsNum = '';
+let binaryType = '';
+let urlHistory = '';
+let favorites = '';
+let favApplyButton = '';
+let favDelButton = '';
+let favAddButton = '';
+let delButton = '';
+let showMsgTsMilliseconds = '';
+let connectionStatus;
+let sendMessage;
+let messages;
+let viewMessage;
+let viewMessageChk;
+let connectButton;
+let disconnectButton;
+let sendButton;
+let clearMsgButton;
 
-    var isBinaryTypeArrayBuffer = function() {
-        return binaryType.val() == 'arraybuffer';
+const MAX_LINES_COUNT = 1000;
+const STG_URL_HIST_KEY = 'ext_swc_url_history';
+const STG_URL_FAV_KEY = 'ext_swc_favorites';
+const STG_URL_SCHEMA_KEY = 'ext_swc_schema';
+const STG_URL_HOST_KEY = 'ext_swc_host';
+const STG_URL_PORT_KEY = 'ext_swc_port';
+const STG_URL_PATH_KEY = 'ext_swc_path';
+const STG_URL_PARAMS_KEY = 'ext_swc_params';
+const STG_BIN_TYPE_KEY = 'ext_swc_bintype';
+const STG_REQUEST_KEY = 'ext_swc_request';
+const STG_MSG_TS_MS_KEY = 'ext_swc_msg_ts_ms';
+const STG_MSGS_NUM_KEY = 'ext_swc_msgs_num';
+
+let lastMsgsNumCur = MAX_LINES_COUNT;
+
+const isBinaryTypeArrayBuffer = function () {
+    return binaryType.val() === 'arraybuffer';
+};
+
+const enableUrl = function () {
+    serverSchema.removeAttr('disabled');
+    serverHost.removeAttr('disabled');
+    serverPort.removeAttr('disabled');
+    serverPath.removeAttr('disabled');
+    serverParams.removeAttr('disabled');
+    binaryType.removeAttr('disabled');
+};
+
+const getUrl = function () {
+    let url = `${serverSchema.val()}://${serverHost.val()}`;
+    if (serverPort.val()) {
+        url += `:${serverPort.val()}`;
     }
-
-    var enableUrl = function() {
-        serverSchema.removeAttr('disabled');
-        serverHost.removeAttr('disabled');
-        serverPort.removeAttr('disabled');
-        serverPath.removeAttr('disabled');
-        serverParams.removeAttr('disabled');
-        binaryType.removeAttr('disabled');
-    };
-
-    var getUrl = function() {
-        var url = serverSchema.val() + '://' + serverHost.val();
-        if (serverPort.val()) {
-            url += ':' + serverPort.val();
-        }
-        if (serverPath.val()) {
-            url += '/' + serverPath.val();
-        }
-        if (serverParams.val()) {
-            url += '?' + serverParams.val();
-        }
-        return url;
-    };
-
-    var getNowDateStr = function() {
-        var now = new Date();
-        String(now.getDate()).padStart(2, "0");
-        var res = now.getFullYear()
-            + '-' + String(now.getMonth() + 1).padStart(2, "0")
-            + '-' + String(now.getDate()).padStart(2, "0")
-            + ' ' + String(now.getHours()).padStart(2, "0")
-            + ':' + String(now.getMinutes()).padStart(2, "0")
-            + ':' + String(now.getSeconds()).padStart(2, "0");
-        if (showMsgTsMilliseconds.is(':checked')) {
-            res += '.' + String(now.getMilliseconds()).padStart(3, "0");
-        }
-        return res;
+    if (serverPath.val()) {
+        url += `/${serverPath.val()}`;
     }
+    if (serverParams.val()) {
+        url += `?${serverParams.val()}`;
+    }
+    return url;
+};
 
-    var getDataFromStorage = function(isFavorites) {
-        var stg_data = localStorage.getItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY),
-            ret = {};
-        if (stg_data !== null) {
-            try {
-                ret = JSON.parse(stg_data);
-            } catch (e) {
-                console.error('could not parse json from storage: ' + e.message);
-            }
-        }
-        return ret;
-    };
+const getNowDateStr = function () {
+    const now = new Date();
+    String(now.getDate()).padStart(2, '0');
+    let res = `${now.getFullYear()}\
+-${String(now.getMonth() + 1).padStart(2, '0')}\
+-${String(now.getDate()).padStart(2, '0')}\
+${String(now.getHours()).padStart(2, '0')}\
+:${String(now.getMinutes()).padStart(2, '0')}\
+:${String(now.getSeconds()).padStart(2, '0')}`;
+    if (showMsgTsMilliseconds.is(':checked')) {
+        res += `.${String(now.getMilliseconds()).padStart(3, '0')}`;
+    }
+    return res;
+};
 
-    var updateDataInStorage = function (isFavorites) {
-        var data = getDataFromStorage(isFavorites);
-        var url = getUrl();
-
-        data[url] = {
-            schema:     serverSchema.val(),
-            host:       serverHost.val(),
-            port:       serverPort.val(),
-            path:       serverPath.val(),
-            params:     serverParams.val(),
-            binaryType: binaryType.val(),
-        };
-        localStorage.setItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY, JSON.stringify(data));
-    };
-
-    var disableUrl = function() {
-        serverSchema.attr('disabled', 'disabled');
-        serverHost.attr('disabled',   'disabled');
-        serverPort.attr('disabled',   'disabled');
-        serverPath.attr('disabled',   'disabled');
-        serverParams.attr('disabled', 'disabled');
-        binaryType.attr('disabled',   'disabled');
-    };
-
-    var enableConnectButton = function() {
-        connectButton.hide();
-        disconnectButton.show();
-    };
-
-    var disableConnectButton = function() {
-        connectButton.show();
-        disconnectButton.hide();
-    };
-
-    var wsIsAlive = function() {
-        return (typeof(ws) === 'object'
-            && ws !== null
-            && 'readyState' in ws
-            && ws.readyState === ws.OPEN
-        );
-    };
-
-    var updateSelect = function(isFavorites, isFirstStart) {
-        var hist = JSON.parse(localStorage.getItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY));
-        var selectElement = isFavorites ? favorites : urlHistory;
-        selectElement.find('option').remove().end();
-        for (var url in hist) {
-            selectElement.append($('<option></option>')
-                .attr('value', url)
-                .text(url));
-        }
-        if (isFavorites && isFirstStart) {
-            selectElement.prop('selectedIndex', -1);
-        }
-    };
-
-    var open = function() {
-        lastMsgsNumCur = MAX_LINES_COUNT;
-        var lastMsgsNumParsed = parseInt(lastMsgsNum.val(), 10);
-        if (!isNaN(lastMsgsNumParsed)) {
-            lastMsgsNumCur = lastMsgsNumParsed;
-        }
-
-        var url = getUrl();
-        ws = new WebSocket(url);
-        if (isBinaryTypeArrayBuffer()) {
-            ws.binaryType = 'arraybuffer';
-        }
-        ws.onopen    = onOpen;
-        ws.onclose   = onClose;
-        ws.onmessage = onMessage;
-        ws.onerror   = onError;
-
-        console.log('OPENING ' + url + ' ...');
-        connectionStatus.css('color', '#999900');
-        connectionStatus.text('OPENING ...');
-        disableUrl();
-        enableConnectButton();
-
-        localStorage.setItem(STG_URL_SCHEMA_KEY, serverSchema.val());
-        localStorage.setItem(STG_URL_HOST_KEY,   serverHost.val());
-        localStorage.setItem(STG_URL_PORT_KEY,   serverPort.val());
-        localStorage.setItem(STG_URL_PATH_KEY,   serverPath.val());
-        localStorage.setItem(STG_URL_PARAMS_KEY, serverParams.val());
-        localStorage.setItem(STG_BIN_TYPE_KEY,   binaryType.val());
-        localStorage.setItem(STG_MSGS_NUM_KEY,   lastMsgsNum.val());
-
-        updateDataInStorage();
-        updateSelect();
-    };
-
-    var close = function() {
-        if (wsIsAlive()) {
-            console.log('CLOSING ...');
-            ws.close();
-        }
-        connected = false;
-        connectionStatus.css('color', '#000');
-        connectionStatus.text('CLOSED');
-        console.log('CLOSED: ' + getUrl());
-
-        enableUrl();
-        disableConnectButton();
-        sendMessage.attr('disabled', 'disabled');
-        sendButton.attr('disabled', 'disabled');
-        lastMsgsNum.removeAttr('disabled');
-    };
-
-    var clearLog = function() {
-        messages.html('');
-        viewMessage.html('');
-        hideViewMessagePanel();
-    };
-
-    var onOpen = function() {
-        console.log('OPENED: ' + getUrl());
-        connected = true;
-        connectionStatus.css('color', '#009900');
-        connectionStatus.text('OPENED');
-        sendMessage.removeAttr('disabled');
-        sendButton.removeAttr('disabled');
-        lastMsgsNum.attr('disabled', 'disabled');
-    };
-
-    var onClose = function(event) {
-        ws = null;
-    };
-
-    var onMessage = function(event) {
-        var data = event.data;
-        if (isBinaryTypeArrayBuffer()) {
-            var buffer = new Uint8Array(data);
-            data = new TextDecoder().decode(buffer).slice(1);
-        }
-        addMessage(data);
-    };
-
-    var onError = function(event) {
-        if (event.data !== undefined) {
-            console.error('ERROR: ' + event.data);
-        }
-        close();
-    };
-
-    var onFilter = function (event) {
-        var filteredMessages = messages
-            .find('pre')
-            .each(function () {
-                var element = $(this);
-
-                if (element.html().indexOf(event.target.value) === -1) {
-                    element.attr('hidden', true);
-                } else {
-                    element.removeAttr('hidden');
-                }
-            });
-    };
-
-    var messageClickHandler = function (event) {
-        if (!event.ctrlKey) {
-            return;
-        }
-        viewMessage.text('');
+const getDataFromStorage = function (isFavorites) {
+    const stgData = localStorage.getItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY);
+    let ret = {};
+    if (stgData !== null) {
         try {
-            var data_decoded = JSON.parse(
-                $(this).html().replace(/^\[[^\]]+?\]\s*/, '')
-            );
+            ret = JSON.parse(stgData);
         } catch (e) {
-            console.error('could not parse json: ' + e.message);
+            console.error(`could not parse json from storage: ${e.message}`);
         }
-        showViewMessagePanel();
-        viewMessage.text(
-            JSON.stringify(data_decoded, null, 2)
+    }
+    return ret;
+};
+
+const updateDataInStorage = function (isFavorites) {
+    const data = getDataFromStorage(isFavorites);
+    const url = getUrl();
+
+    data[url] = {
+        schema: serverSchema.val(),
+        host: serverHost.val(),
+        port: serverPort.val(),
+        path: serverPath.val(),
+        params: serverParams.val(),
+        binaryType: binaryType.val(),
+    };
+    localStorage.setItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY, JSON.stringify(data));
+};
+
+const disableUrl = function () {
+    serverSchema.attr('disabled', 'disabled');
+    serverHost.attr('disabled', 'disabled');
+    serverPort.attr('disabled', 'disabled');
+    serverPath.attr('disabled', 'disabled');
+    serverParams.attr('disabled', 'disabled');
+    binaryType.attr('disabled', 'disabled');
+};
+
+const enableConnectButton = function () {
+    connectButton.hide();
+    disconnectButton.show();
+};
+
+const disableConnectButton = function () {
+    connectButton.show();
+    disconnectButton.hide();
+};
+
+const wsIsAlive = function () {
+    return (typeof (ws) === 'object'
+        && ws !== null
+        && 'readyState' in ws
+        && ws.readyState === ws.OPEN
+    );
+};
+
+const updateSelect = function (isFavorites, isFirstStart) {
+    const hist = JSON.parse(localStorage.getItem(isFavorites ? STG_URL_FAV_KEY : STG_URL_HIST_KEY));
+    const selectElement = isFavorites ? favorites : urlHistory;
+    selectElement.find('option').remove().end();
+    for (const url in hist) {
+        selectElement.append($('<option></option>')
+            .attr('value', url)
+            .text(url));
+    }
+    if (isFavorites && isFirstStart) {
+        selectElement.prop('selectedIndex', -1);
+    }
+};
+
+const onOpen = function () {
+    console.log(`OPENED: ${getUrl()}`);
+    connectionStatus.css('color', '#009900');
+    connectionStatus.text('OPENED');
+    sendMessage.removeAttr('disabled');
+    sendButton.removeAttr('disabled');
+    lastMsgsNum.attr('disabled', 'disabled');
+};
+
+const onClose = function () {
+    ws = null;
+};
+
+const showViewMessagePanel = function () {
+    if (viewMessage.is(':visible')) {
+        return;
+    }
+    messages.css('width', 'calc(70vw - 54px)');
+    viewMessage.attr('class', 'viewMessageVisible');
+    viewMessageChk.prop('checked', true);
+};
+
+const hideViewMessagePanel = function () {
+    if (viewMessage.is(':hidden')) {
+        return;
+    }
+    messages.css('width', 'calc(100vw - 54px)');
+    viewMessage.attr('class', 'viewMessageHidden');
+    viewMessageChk.prop('checked', false);
+};
+
+const messageClickHandler = function (event) {
+    if (!event.ctrlKey) {
+        return;
+    }
+    viewMessage.text('');
+    let dataDecoded;
+    try {
+        dataDecoded = JSON.parse(
+            $(this).html().replace(/^\[[^\]]+?\]\s*/, ''),
         );
+    } catch (e) {
+        console.error(`could not parse json: ${e.message}`);
+    }
+    showViewMessagePanel();
+    viewMessage.text(
+        JSON.stringify(dataDecoded, null, 2),
+    );
 
-        messages.find('pre').each(function () {
-            $(this).css('background-color', '#ffffff');
-        });
-        $(this).css('background-color', '#eeeeee');
-    };
+    messages.find('pre').each(function () {
+        $(this).css('background-color', '#fff');
+    });
+    $(this).css('background-color', '#eee');
+};
 
-    var addMessage = function(data, type) {
-        var msg = $('<pre>').text('[' + getNowDateStr() + '] ' + data);
-        msg.click(messageClickHandler);
-        var filterValue = filterMessage.val();
+const addMessage = function (data, type) {
+    const msg = $('<pre>').text(`[${getNowDateStr()}] ${data}`);
+    msg.click(messageClickHandler);
+    const filterValue = filterMessage.val();
 
-        if (filterValue && data.indexOf(filterValue) === -1) {
-            msg.attr('hidden', true);
-        }
+    if (filterValue && data.indexOf(filterValue) === -1) {
+        msg.attr('hidden', true);
+    }
 
-        if (type === 'SENT') {
-            msg.addClass('sent');
-        }
-        messages.append(msg);
+    if (type === 'SENT') {
+        msg.addClass('sent');
+    }
+    messages.append(msg);
 
-        var msgBox = messages.get(0);
-        while (msgBox.childNodes.length > lastMsgsNumCur) {
-            msgBox.removeChild(msgBox.firstChild);
-        }
-        msgBox.scrollTop = msgBox.scrollHeight;
-    };
+    const msgBox = messages.get(0);
+    while (msgBox.childNodes.length > lastMsgsNumCur) {
+        msgBox.removeChild(msgBox.firstChild);
+    }
+    msgBox.scrollTop = msgBox.scrollHeight;
+};
 
-    var urlKeyDown = function(e) {
-        if (e.which == 13) {
-            connectButton.click();
-            return false;
-        }
-    };
+const onMessage = function (event) {
+    let { data } = event;
+    if (isBinaryTypeArrayBuffer()) {
+        const buffer = new Uint8Array(data);
+        data = new TextDecoder().decode(buffer).slice(1);
+    }
+    addMessage(data);
+};
 
-    var applyUrlData = function(data) {
-        if (data.schema !== undefined) {
-            serverSchema.val(data.schema);
-        }
-        if (data.host !== undefined) {
-            serverHost.val(data.host);
-        }
-        if (data.port !== undefined) {
-            serverPort.val(data.port);
-        }
-        if (data.path !== undefined) {
-            serverPath.val(data.path);
-        }
-        if (data.params !== undefined) {
-            serverParams.val(data.params);
-        }
-        if (data.binaryType !== undefined) {
-            binaryType.val(data.binaryType);
-        }
-    };
+const close = function () {
+    if (wsIsAlive()) {
+        console.log('CLOSING ...');
+        ws.close();
+    }
+    connectionStatus.css('color', '#000');
+    connectionStatus.text('CLOSED');
+    console.log(`CLOSED: ${getUrl()}`);
 
-    var applyCurrentFavorite = function(e) {
-        var url = favorites.val(),
-            data = getDataFromStorage(true);
-        if (!(url in data)) {
-            console.warn('could not retrieve favorites item');
-            return;
-        }
-        applyUrlData(data[url]);
-        close();
-    };
+    enableUrl();
+    disableConnectButton();
+    sendMessage.attr('disabled', 'disabled');
+    sendButton.attr('disabled', 'disabled');
+    lastMsgsNum.removeAttr('disabled');
+};
 
-    var showViewMessagePanel = function() {
-        if (viewMessage.is(':visible')) {
-            return;
-        }
-        messages.css('width', 'calc(70vw - 54px)');
-        viewMessage.attr('class', 'viewMessageVisible');
-        viewMessageChk.prop('checked', true);
-    };
+const onError = function (event) {
+    if (event.data !== undefined) {
+        console.error(`ERROR: ${event.data}`);
+    }
+    close();
+};
 
-    var hideViewMessagePanel = function() {
-        if (viewMessage.is(':hidden')) {
-            return;
-        }
-        messages.css('width', 'calc(100vw - 54px)');
-        viewMessage.attr('class', 'viewMessageHidden');
-        viewMessageChk.prop('checked', false);
-    };
+const open = function () {
+    lastMsgsNumCur = Number(parseInt(lastMsgsNum.val(), 10));
+    if (Number.isNaN(lastMsgsNumCur)) {
+        lastMsgsNumCur = MAX_LINES_COUNT;
+    } else {
+        lastMsgsNum.val(lastMsgsNumCur);
+    }
 
-    var viewMessageToggle = function() {
-        if ($(this).is(':checked')) {
-            showViewMessagePanel();
+    const url = getUrl();
+    ws = new WebSocket(url);
+    if (isBinaryTypeArrayBuffer()) {
+        ws.binaryType = 'arraybuffer';
+    }
+    ws.onopen = onOpen;
+    ws.onclose = onClose;
+    ws.onmessage = onMessage;
+    ws.onerror = onError;
+
+    console.log(`OPENING ${url} ...`);
+    connectionStatus.css('color', '#999900');
+    connectionStatus.text('OPENING ...');
+    disableUrl();
+    enableConnectButton();
+
+    localStorage.setItem(STG_URL_SCHEMA_KEY, serverSchema.val());
+    localStorage.setItem(STG_URL_HOST_KEY, serverHost.val());
+    localStorage.setItem(STG_URL_PORT_KEY, serverPort.val());
+    localStorage.setItem(STG_URL_PATH_KEY, serverPath.val());
+    localStorage.setItem(STG_URL_PARAMS_KEY, serverParams.val());
+    localStorage.setItem(STG_BIN_TYPE_KEY, binaryType.val());
+    localStorage.setItem(STG_MSGS_NUM_KEY, lastMsgsNum.val());
+
+    updateDataInStorage();
+    updateSelect();
+};
+
+const clearLog = function () {
+    messages.html('');
+    viewMessage.html('');
+    hideViewMessagePanel();
+};
+
+const onFilter = function (event) {
+    messages.find('pre').each(function () {
+        const element = $(this);
+
+        if (element.html().indexOf(event.target.value) === -1) {
+            element.attr('hidden', true);
         } else {
-            hideViewMessagePanel();
+            element.removeAttr('hidden');
         }
-    };
+    });
+};
 
-    WebSocketClient = {
-        init: function() {
-            serverSchema  = $('#serverSchema');
-            serverHost    = $('#serverHost');
-            serverPort    = $('#serverPort');
-            serverPath    = $('#serverPath');
-            serverParams  = $('#serverParams');
-            binaryType    = $('#binaryType');
-            filterMessage = $('#filterMessage');
-            lastMsgsNum   = $('#lastMsgsNum');
-            urlHistory    = $('#urlHistory');
-            favorites     = $('#favorites');
+const urlKeyDown = function (e) {
+    if (e.which === 13) {
+        connectButton.click();
+        return false;
+    }
+    return true;
+};
 
-            connectionStatus = $('#connectionStatus');
-            sendMessage      = $('#sendMessage');
+const applyUrlData = function (data) {
+    if (data.schema !== undefined) {
+        serverSchema.val(data.schema);
+    }
+    if (data.host !== undefined) {
+        serverHost.val(data.host);
+    }
+    if (data.port !== undefined) {
+        serverPort.val(data.port);
+    }
+    if (data.path !== undefined) {
+        serverPath.val(data.path);
+    }
+    if (data.params !== undefined) {
+        serverParams.val(data.params);
+    }
+    if (data.binaryType !== undefined) {
+        binaryType.val(data.binaryType);
+    }
+};
 
-            delButton        = $('#delButton');
-            favApplyButton   = $('#favApplyButton');
-            favDelButton     = $('#favDelButton');
-            favAddButton     = $('#favAddButton');
-            connectButton    = $('#connectButton');
-            disconnectButton = $('#disconnectButton');
-            sendButton       = $('#sendButton');
-            clearMsgButton   = $('#clearMessage');
-            showMsgTsMilliseconds = $('#showMsgTsMilliseconds');
-            viewMessageChk   = $('#viewMessageChk');
+const applyCurrentFavorite = function () {
+    const url = favorites.val();
+    const data = getDataFromStorage(true);
+    if (!(url in data)) {
+        console.warn('could not retrieve favorites item');
+        return;
+    }
+    applyUrlData(data[url]);
+    close();
+};
 
-            messages         = $('#messages');
-            viewMessage      = $('#viewMessage');
+const viewMessageToggle = function () {
+    if ($(this).is(':checked')) {
+        showViewMessagePanel();
+    } else {
+        hideViewMessagePanel();
+    }
+};
 
-            updateSelect();
-            updateSelect(true, true);
+const init = function () {
+    serverSchema = $('#serverSchema');
+    serverHost = $('#serverHost');
+    serverPort = $('#serverPort');
+    serverPath = $('#serverPath');
+    serverParams = $('#serverParams');
+    binaryType = $('#binaryType');
+    filterMessage = $('#filterMessage');
+    lastMsgsNum = $('#lastMsgsNum');
+    urlHistory = $('#urlHistory');
+    favorites = $('#favorites');
 
-            var stg_url_schema = localStorage.getItem(STG_URL_SCHEMA_KEY);
-            if (stg_url_schema !== null) {
-                serverSchema.val(stg_url_schema);
-            }
-            var stg_url_host = localStorage.getItem(STG_URL_HOST_KEY);
-            if (stg_url_host !== null) {
-                serverHost.val(stg_url_host);
-            }
-            var stg_url_port = localStorage.getItem(STG_URL_PORT_KEY);
-            if (stg_url_port !== null) {
-                serverPort.val(stg_url_port);
-            }
-            var stg_url_path = localStorage.getItem(STG_URL_PATH_KEY);
-            if (stg_url_path !== null) {
-                serverPath.val(stg_url_path);
-            }
-            var stg_url_params = localStorage.getItem(STG_URL_PARAMS_KEY);
-            if (stg_url_params !== null) {
-                serverParams.val(stg_url_params);
-            }
-            var stg_bin_type = localStorage.getItem(STG_BIN_TYPE_KEY);
-            if (stg_bin_type !== null) {
-                binaryType.val(stg_bin_type);
-            }
-            var stg_request = localStorage.getItem(STG_REQUEST_KEY);
-            if (stg_request !== null) {
-                sendMessage.val(stg_request);
-            }
-            var stg_msg_ts_ms = localStorage.getItem(STG_MSG_TS_MS_KEY);
-            if (stg_msg_ts_ms !== null && stg_msg_ts_ms === 'true') {
-                showMsgTsMilliseconds.prop('checked', true);
-            }
-            var stg_msgs_num = localStorage.getItem(STG_MSGS_NUM_KEY);
-            if (stg_msgs_num !== null) {
-                lastMsgsNum.val(stg_msgs_num);
-            }
+    connectionStatus = $('#connectionStatus');
+    sendMessage = $('#sendMessage');
 
-            urlHistory.change(function(e) {
-                var url = urlHistory.val(),
-                    url_hist = getDataFromStorage();
-                if (!(url in url_hist)) {
-                    console.warn('could not retrieve history item');
-                    return;
-                }
-                applyUrlData(url_hist[url]);
-                close();
-            });
+    delButton = $('#delButton');
+    favApplyButton = $('#favApplyButton');
+    favDelButton = $('#favDelButton');
+    favAddButton = $('#favAddButton');
+    connectButton = $('#connectButton');
+    disconnectButton = $('#disconnectButton');
+    sendButton = $('#sendButton');
+    clearMsgButton = $('#clearMessage');
+    showMsgTsMilliseconds = $('#showMsgTsMilliseconds');
+    viewMessageChk = $('#viewMessageChk');
 
-            favorites.change(applyCurrentFavorite);
+    messages = $('#messages');
+    viewMessage = $('#viewMessage');
 
-            delButton.click(function(e) {
-                var url = urlHistory.val(),
-                    url_hist = getDataFromStorage();
-                if (url in url_hist) {
-                    delete url_hist[url];
-                }
-                localStorage.setItem(STG_URL_HIST_KEY, JSON.stringify(url_hist));
-                updateSelect();
-            });
+    updateSelect();
+    updateSelect(true, true);
 
-            favDelButton.click(function(e) {
-                var url = favorites.val(),
-                    fav = getDataFromStorage(true);
-                if (url in fav) {
-                    delete fav[url];
-                }
-                localStorage.setItem(STG_URL_FAV_KEY, JSON.stringify(fav));
-                updateSelect(true);
-            });
+    const stgUrlSchema = localStorage.getItem(STG_URL_SCHEMA_KEY);
+    if (stgUrlSchema !== null) {
+        serverSchema.val(stgUrlSchema);
+    }
+    const stgUrlHost = localStorage.getItem(STG_URL_HOST_KEY);
+    if (stgUrlHost !== null) {
+        serverHost.val(stgUrlHost);
+    }
+    const stgUrlPort = localStorage.getItem(STG_URL_PORT_KEY);
+    if (stgUrlPort !== null) {
+        serverPort.val(stgUrlPort);
+    }
+    const stgUrlPath = localStorage.getItem(STG_URL_PATH_KEY);
+    if (stgUrlPath !== null) {
+        serverPath.val(stgUrlPath);
+    }
+    const stgUrlParams = localStorage.getItem(STG_URL_PARAMS_KEY);
+    if (stgUrlParams !== null) {
+        serverParams.val(stgUrlParams);
+    }
+    const stgBinType = localStorage.getItem(STG_BIN_TYPE_KEY);
+    if (stgBinType !== null) {
+        binaryType.val(stgBinType);
+    }
+    const stgRequest = localStorage.getItem(STG_REQUEST_KEY);
+    if (stgRequest !== null) {
+        sendMessage.val(stgRequest);
+    }
+    const stgMsgTsMs = localStorage.getItem(STG_MSG_TS_MS_KEY);
+    if (stgMsgTsMs !== null && stgMsgTsMs === 'true') {
+        showMsgTsMilliseconds.prop('checked', true);
+    }
+    const stgMsgsNum = localStorage.getItem(STG_MSGS_NUM_KEY);
+    if (stgMsgsNum !== null) {
+        lastMsgsNum.val(stgMsgsNum);
+    }
 
-            favApplyButton.click(applyCurrentFavorite);
-
-            favAddButton.click(function(e) {
-                updateDataInStorage(true);
-                updateSelect(true);
-            });
-
-            connectButton.click(function(e) {
-                if (wsIsAlive()) {
-                    close();
-                }
-                open();
-            });
-
-            disconnectButton.click(close);
-
-            sendButton.click(function(e) {
-                var msg = sendMessage.val();
-                addMessage(msg, 'SENT');
-                ws.send(msg);
-                localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
-            });
-
-            clearMsgButton.click(clearLog);
-
-            filterMessage.on('input', onFilter);
-
-            sendMessage.keydown(function (e) {
-                if (e.which == 13 && e.ctrlKey) {
-                    sendButton.click();
-                }
-            });
-
-            showMsgTsMilliseconds.change(function() {
-                localStorage.setItem(STG_MSG_TS_MS_KEY, showMsgTsMilliseconds.is(':checked'));
-            });
-
-            serverSchema.keydown(urlKeyDown);
-            serverHost.keydown(urlKeyDown);
-            serverPort.keydown(urlKeyDown);
-            serverPath.keydown(urlKeyDown);
-            serverParams.keydown(urlKeyDown);
-
-            viewMessageChk.change(viewMessageToggle);
+    urlHistory.change(() => {
+        const url = urlHistory.val();
+        const urlHist = getDataFromStorage();
+        if (!(url in urlHist)) {
+            console.warn('could not retrieve history item');
+            return;
         }
-    };
-})();
+        applyUrlData(urlHist[url]);
+        close();
+    });
 
-$(function() {
-    WebSocketClient.init();
+    favorites.change(applyCurrentFavorite);
+
+    delButton.click(() => {
+        const url = urlHistory.val();
+        const urlHist = getDataFromStorage();
+        if (url in urlHist) {
+            delete urlHist[url];
+        }
+        localStorage.setItem(STG_URL_HIST_KEY, JSON.stringify(urlHist));
+        updateSelect();
+    });
+
+    favDelButton.click(() => {
+        const url = favorites.val();
+        const fav = getDataFromStorage(true);
+        if (url in fav) {
+            delete fav[url];
+        }
+        localStorage.setItem(STG_URL_FAV_KEY, JSON.stringify(fav));
+        updateSelect(true);
+    });
+
+    favApplyButton.click(applyCurrentFavorite);
+
+    favAddButton.click(() => {
+        updateDataInStorage(true);
+        updateSelect(true);
+    });
+
+    connectButton.click(() => {
+        if (wsIsAlive()) {
+            close();
+        }
+        open();
+    });
+
+    disconnectButton.click(close);
+
+    sendButton.click(() => {
+        const msg = sendMessage.val();
+        addMessage(msg, 'SENT');
+        ws.send(msg);
+        localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
+    });
+
+    clearMsgButton.click(clearLog);
+
+    filterMessage.on('input', onFilter);
+
+    sendMessage.keydown((e) => {
+        if (e.which === 13 && e.ctrlKey) {
+            sendButton.click();
+        }
+    });
+
+    showMsgTsMilliseconds.change(() => {
+        localStorage.setItem(STG_MSG_TS_MS_KEY, showMsgTsMilliseconds.is(':checked'));
+    });
+
+    serverSchema.keydown(urlKeyDown);
+    serverHost.keydown(urlKeyDown);
+    serverPort.keydown(urlKeyDown);
+    serverPath.keydown(urlKeyDown);
+    serverParams.keydown(urlKeyDown);
+
+    viewMessageChk.change(viewMessageToggle);
+};
+
+$(() => {
+    init();
 });
