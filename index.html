@@ -9,18 +9,18 @@
 <div id="content">
     <fieldset>
         <legend>Server Location</legend>
-        <div class="server_row">
+        <div class="option_row">
             <label>URL history:</label>
             <select id="urlHistory"></select>
             <button id="delButton">Del</button>
         </div>
-        <div class="server_row">
+        <div class="option_row">
             <label>Favorites:</label>
             <select id="favorites"></select>
             <button id="favApplyButton">Apply</button>
             <button id="favDelButton">Del</button>
         </div>
-        <div class="server_row">
+        <div class="option_row">
             <label>URL:</label>
             <input type="text" id="serverSchema" value="wss"/>&nbsp;&#58;&#47;&#47;
             <input type="text" id="serverHost" value="echo.websocket.org"/>&nbsp;&#58;
@@ -28,47 +28,47 @@
             <input type="text" id="serverPath" value=""/>&nbsp;&#63;
             <input type="text" id="serverParams" value=""/>
         </div>
-        <div class="server_row">
+        <div class="option_row">
             <label>Binary type:</label>
             <select id="binaryType">
                 <option value="">-</option>
                 <option value="arraybuffer">arraybuffer</option>
             </select>
             <button id="connectButton">Open</button>
-            <button id="disconnectButton">Close</button>
+            <button id="disconnectButton" class="hidden">Close</button>
             <button id="favAddButton">Add to favorites</button>
         </div>
-        <div class="server_row">
+        <div class="option_row">
             <label>Status:</label>
             <span id="connectionStatus">CLOSED</span>
         </div>
     </fieldset>
-    <div class="filter_row">
-        <label>Filter:&nbsp;</label><input type="text" id="filterMessage">
+    <div class="option_row">
+        <label>Show last&nbsp;</label><input type="text" id="lastMsgsNum"><label>&nbsp;messages (default: 1000)</label>
     </div>
-    <div class="filter_row">
-        <label>Show last&nbsp;</label><input type="text" id="lastMsgsNum"><label>&nbsp; messages (default: 1000)</label>
-    </div>
-    <fieldset id="requestArea">
+    <fieldset>
         <legend>Request</legend>
         <div>
             <textarea id="sendMessage" disabled="disabled"></textarea>
         </div>
         <div>
-            <button id="sendButton" disabled="disabled">Send</button>
-            [Shortcut] Ctr + Enter
+            <button id="sendButton" disabled="disabled">Send</button>&nbsp;(Ctrl + Enter)
         </div>
     </fieldset>
-    <div class="toggle_view_message_row">
-        <label>Show message panel:&nbsp;<input type="checkbox" id="viewMessageChk"></label> (Ctrl/Meta + click on message)
-    </div>
-    <div class="toggle_milliseconds_row">
+    <div class="option_row">
         <label>Show message timestamp milliseconds:&nbsp;<input type="checkbox" id="showMsgTsMilliseconds"></label>
     </div>
-    <fieldset id="messageArea">
-        <legend>Message Log <button id="clearMessage">Clear</button></legend>
+    <div class="option_row">
+        <label>Show message panel:&nbsp;<input type="checkbox" id="viewMessageChk"></label> (Ctrl/Meta + click on message)
+    </div>
+    <fieldset>
+        <legend>
+            Message Log
+            <button id="clearMessage">Clear</button>&nbsp;
+            <label>Filter&nbsp;</label><input type="text" id="filterMessage">
+        </legend>
         <div id="messages"></div>
-        <div id="viewMessage" class="viewMessageHidden"></div>
+        <div id="viewMessage" class="viewMessage hidden"></div>
     </fieldset>
 </div>
 <script src="lib/jquery.slim.min.js"></script>

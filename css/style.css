@@ -33,72 +33,35 @@ label {
     padding: 10px;
 }
 
-.server_row {
+.option_row {
     margin-bottom: 4px;
 }
 
-.filter_row {
-    margin-bottom: 4px;
-}
-
-.toggle_milliseconds_row {
-    margin-bottom: 5px;
-}
-
-.toggle_view_message_row {
-    margin-bottom: 5px;
-    float: right;
-}
-
-#urlHistory, #favorites {
+#urlHistory, #favorites, #filterMessage {
     width: 500px;
     padding: 1px 3px;
     border: 1px solid #999;
 }
 
-#serverSchema {
+#serverSchema, #serverPort, #lastMsgsNum {
     width: 50px;
     padding: 1px 3px;
     border: 1px solid #999;
 }
+
 #serverHost {
     width: 200px;
     padding: 1px 3px;
     border: 1px solid #999;
 }
-#serverPort {
-    width: 50px;
-    padding: 1px 3px;
-    border: 1px solid #999;
-}
-#serverPath {
-    width: 300px;
-    padding: 1px 3px;
-    border: 1px solid #999;
-}
-#serverParams {
+
+#serverPath, #serverParams {
     width: 300px;
     padding: 1px 3px;
     border: 1px solid #999;
 }
 
-#filterMessage {
-    width: 700px;
-    padding: 1px 3px;
-    border: 1px solid #999;
-}
-
-#lastMsgsNum {
-    width: 50px;
-    padding: 1px 3px;
-    border: 1px solid #999;
-}
-
-#disconnectButton {
-    display: none;
-}
-
-#requestArea textarea {
+#sendMessage {
     min-width: 300px;
     height: 2em;
     padding: 0 3px;
@@ -128,7 +91,7 @@ label {
     color: #f63;
 }
 
-.viewMessageVisible {
+.viewMessage {
     height: 500px;
     padding: 0 5px;
     overflow: auto;
@@ -142,6 +105,7 @@ label {
     white-space: pre;
     font-family: monospace;
 }
-.viewMessageHidden {
+
+.hidden {
     display: none;
 }

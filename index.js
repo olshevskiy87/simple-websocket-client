@@ -169,7 +169,8 @@ const showViewMessagePanel = function () {
         return;
     }
     messages.css('width', 'calc(70vw - 54px)');
-    viewMessage.attr('class', 'viewMessageVisible');
+    viewMessage.attr('class', 'viewMessage');
+    viewMessage.show();
     viewMessageChk.prop('checked', true);
 };
 
@@ -178,7 +179,7 @@ const hideViewMessagePanel = function () {
         return;
     }
     messages.css('width', 'calc(100vw - 54px)');
-    viewMessage.attr('class', 'viewMessageHidden');
+    viewMessage.hide();
     viewMessageChk.prop('checked', false);
 };
 
