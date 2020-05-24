@@ -183,7 +183,7 @@ const hideViewMessagePanel = function () {
 };
 
 const messageClickHandler = function (event) {
-    if (!event.ctrlKey) {
+    if (!event.ctrlKey && !event.metaKey) {
         return;
     }
     viewMessage.text('');
