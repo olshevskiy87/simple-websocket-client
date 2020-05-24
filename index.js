@@ -361,6 +361,69 @@ const viewMessageToggle = function () {
     }
 };
 
+const urlHistoryOnChange = function () {
+    const url = urlHistory.val();
+    const urlHist = getDataFromStorage();
+    if (!(url in urlHist)) {
+        console.warn('could not retrieve history item');
+        return;
+    }
+    applyUrlData(urlHist[url]);
+    close();
+};
+
+const delButtonOnClick = function () {
+    const url = urlHistory.val();
+    const urlHist = getDataFromStorage();
+    if (url in urlHist) {
+        delete urlHist[url];
+    }
+    localStorage.setItem(STG_URL_HIST_KEY, JSON.stringify(urlHist));
+    updateSelect();
+};
+
+const favDelButtonOnClick = function () {
+    const url = favorites.val();
+    const fav = getDataFromStorage(true);
+    if (url in fav) {
+        delete fav[url];
+    }
+    localStorage.setItem(STG_URL_FAV_KEY, JSON.stringify(fav));
+    updateSelect(true);
+};
+
+const favAddButtonOnClick = function () {
+    updateDataInStorage(true);
+    updateSelect(true);
+};
+
+const connectButtonOnClick = function () {
+    if (wsIsAlive()) {
+        close();
+    }
+    open();
+};
+
+const sendButtonOnClick = function () {
+    const msg = sendMessage.val();
+    addMessage(msg, 'SENT');
+    ws.send(msg);
+    localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
+};
+
+const sendMessageOnKeydown = function (e) {
+    if (e.which === 13 && e.ctrlKey) {
+        sendButton.click();
+    }
+};
+
+const showMsgTsMillisecondsOnChange = function () {
+    localStorage.setItem(
+        STG_MSG_TS_MS_KEY,
+        showMsgTsMilliseconds.is(':checked'),
+    );
+};
+
 const init = function () {
     serverSchema = $('#serverSchema');
     serverHost = $('#serverHost');
@@ -430,75 +493,8 @@ const init = function () {
         lastMsgsNum.val(stgMsgsNum);
     }
 
-    urlHistory.change(() => {
-        const url = urlHistory.val();
-        const urlHist = getDataFromStorage();
-        if (!(url in urlHist)) {
-            console.warn('could not retrieve history item');
-            return;
-        }
-        applyUrlData(urlHist[url]);
-        close();
-    });
-
+    urlHistory.change(urlHistoryOnChange);
     favorites.change(applyCurrentFavorite);
-
-    delButton.click(() => {
-        const url = urlHistory.val();
-        const urlHist = getDataFromStorage();
-        if (url in urlHist) {
-            delete urlHist[url];
-        }
-        localStorage.setItem(STG_URL_HIST_KEY, JSON.stringify(urlHist));
-        updateSelect();
-    });
-
-    favDelButton.click(() => {
-        const url = favorites.val();
-        const fav = getDataFromStorage(true);
-        if (url in fav) {
-            delete fav[url];
-        }
-        localStorage.setItem(STG_URL_FAV_KEY, JSON.stringify(fav));
-        updateSelect(true);
-    });
-
-    favApplyButton.click(applyCurrentFavorite);
-
-    favAddButton.click(() => {
-        updateDataInStorage(true);
-        updateSelect(true);
-    });
-
-    connectButton.click(() => {
-        if (wsIsAlive()) {
-            close();
-        }
-        open();
-    });
-
-    disconnectButton.click(close);
-
-    sendButton.click(() => {
-        const msg = sendMessage.val();
-        addMessage(msg, 'SENT');
-        ws.send(msg);
-        localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
-    });
-
-    clearMsgButton.click(clearLog);
-
-    filterMessage.on('input', onFilter);
-
-    sendMessage.keydown((e) => {
-        if (e.which === 13 && e.ctrlKey) {
-            sendButton.click();
-        }
-    });
-
-    showMsgTsMilliseconds.change(() => {
-        localStorage.setItem(STG_MSG_TS_MS_KEY, showMsgTsMilliseconds.is(':checked'));
-    });
 
     serverSchema.keydown(urlKeyDown);
     serverHost.keydown(urlKeyDown);
@@ -506,6 +502,21 @@ const init = function () {
     serverPath.keydown(urlKeyDown);
     serverParams.keydown(urlKeyDown);
 
+    delButton.click(delButtonOnClick);
+
+    favDelButton.click(favDelButtonOnClick);
+    favApplyButton.click(applyCurrentFavorite);
+    favAddButton.click(favAddButtonOnClick);
+
+    connectButton.click(connectButtonOnClick);
+    disconnectButton.click(close);
+
+    sendButton.click(sendButtonOnClick);
+    sendMessage.keydown(sendMessageOnKeydown);
+
+    clearMsgButton.click(clearLog);
+    filterMessage.on('input', onFilter);
+    showMsgTsMilliseconds.change(showMsgTsMillisecondsOnChange);
     viewMessageChk.change(viewMessageToggle);
 };
 
