@@ -12,4 +12,5 @@ exclude.lst
 *.swo
 package*.json
 .eslintrc.json
+.csslintrc
 resources/screenshot.png

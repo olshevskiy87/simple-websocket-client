@@ -6,4 +6,5 @@ dist:
 	zip -r "$(EXTENSION)-$(EXTVERSION).zip" . -x@exclude.lst
 
 test:
-	@npm test -s
+	@npm run test_js -s
+	@npm run test_css -s

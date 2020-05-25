@@ -1,28 +1,51 @@
 body {
+    background-color: #eee;
+    color: #000;
+    font-family: "DejaVu Sans", Arial, sans-serif;
+    font-size: 10pt;
     margin: 0;
     width: 100%;
-    font-family: font-family:'ÉqÉâÉMÉmäpÉS Pro W3','Hiragino Kaku Gothic Pro','ÉÅÉCÉäÉI',Meiryo,'ÇlÇr ÇoÉSÉVÉbÉN',sans-serif;
-    color: #000;
-    background-color: #eee;
-    font-size: 10pt;
 }
 
 fieldset {
+    border: 1px solid #777;
     margin: 0 0 10px 0;
     padding: 5px 10px;
-    border: 1px solid #777;
 }
 
 legend {
-    padding: 0 5px;
     color: #777;
     font-size: 11pt;
     font-weight: bold;
+    padding: 0 5px;
 }
 
 label {
     color: #777;
     font-weight: bold;
+}
+
+.viewMessage {
+    background-color: #fff;
+    border: 1px dotted #777;
+    float: right;
+    font-family: monospace;
+    height: 500px;
+    line-height: 150%;
+    overflow: auto;
+    overflow: scroll;
+    padding: 0 5px;
+    resize: vertical;
+    white-space: pre;
+    width: calc(30vw - 30px);
+}
+
+.hidden {
+    display: none;
+}
+
+.option_row {
+    margin-bottom: 4px;
 }
 
 #connectionStatus {
@@ -33,79 +56,56 @@ label {
     padding: 10px;
 }
 
-.option_row {
-    margin-bottom: 4px;
-}
-
 #urlHistory, #favorites, #filterMessage {
-    width: 500px;
-    padding: 1px 3px;
     border: 1px solid #999;
+    padding: 1px 3px;
+    width: 500px;
 }
 
 #serverSchema, #serverPort, #lastMsgsNum {
-    width: 50px;
-    padding: 1px 3px;
     border: 1px solid #999;
+    padding: 1px 3px;
+    width: 50px;
 }
 
 #serverHost {
-    width: 200px;
-    padding: 1px 3px;
     border: 1px solid #999;
+    padding: 1px 3px;
+    width: 200px;
 }
 
 #serverPath, #serverParams {
-    width: 300px;
-    padding: 1px 3px;
     border: 1px solid #999;
+    padding: 1px 3px;
+    width: 300px;
 }
 
 #sendMessage {
-    min-width: 300px;
     height: 2em;
-    padding: 0 3px;
     line-height: 150%;
+    min-width: 300px;
+    padding: 0 3px;
 }
 
 #messages {
-    height: 500px;
-    padding: 0 5px;
-    overflow: auto;
-    border: 1px dotted #777;
     background-color: #fff;
+    border: 1px dotted #777;
+    float: left;
+    height: 500px;
     line-height: 150%;
+    overflow: auto;
     overflow: scroll;
+    padding: 0 5px;
     resize: vertical;
     width: calc(100vw - 54px);
-    float: left;
 }
 
 #messages pre {
+    color: #000;
     margin: 0;
     width: 100%;
-    color: #000;
 }
 
-#messages pre.sent {
+#messages .sent {
     color: #f63;
-}
-
-.viewMessage {
-    height: 500px;
-    padding: 0 5px;
-    overflow: auto;
-    border: 1px dotted #777;
-    background-color: #fff;
-    line-height: 150%;
-    overflow: scroll;
-    resize: vertical;
-    width: calc(30vw - 30px);
-    float: right;
-    white-space: pre;
-    font-family: monospace;
-}
-
-.hidden {
-    display: none;
 }
