@@ -5,12 +5,10 @@ node_modules/*
 README.md
 LICENSE.txt
 Makefile
-exclude.lst
 *.zip
 *.swp
 *.swn
 *.swo
 package*.json
-.eslintrc.json
-.csslintrc
+configs/*
 resources/screenshot.png

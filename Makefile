@@ -3,7 +3,7 @@ EXTVERSION	:= $(shell grep '"version":' manifest.json | awk '{print $$2}' | tr -
 
 dist:
 	@rm -f *.zip
-	zip -r "$(EXTENSION)-$(EXTVERSION).zip" . -x@exclude.lst
+	zip -r "$(EXTENSION)-$(EXTVERSION).zip" . -x@configs/exclude.lst
 
 test:
 	@npm run test_js -s

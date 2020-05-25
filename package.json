@@ -7,7 +7,7 @@
     "csslint": "1.0.5"
   },
   "scripts": {
-    "test_js": "eslint index.js background.js",
-    "test_css": "csslint --quiet --format=compact css"
+    "test_js": "eslint --config configs/.eslintrc.json index.js background.js",
+    "test_css": "csslint --quiet --format=compact --config=configs/.csslintrc css"
   }
 }
