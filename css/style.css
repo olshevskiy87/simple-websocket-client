@@ -32,7 +32,6 @@ label {
     font-family: monospace;
     height: 500px;
     line-height: 150%;
-    overflow: auto;
     overflow: scroll;
     padding: 0 5px;
     resize: vertical;
@@ -93,7 +92,6 @@ label {
     float: left;
     height: 500px;
     line-height: 150%;
-    overflow: auto;
     overflow: scroll;
     padding: 0 5px;
     resize: vertical;
