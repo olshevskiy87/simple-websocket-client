@@ -101,7 +101,8 @@ label {
 #messages pre {
     color: #000;
     margin: 0;
-    width: 100%;
+    min-width: fit-content;
+    width: fit-content;
 }
 
 #messages .sent {
