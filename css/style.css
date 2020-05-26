@@ -39,6 +39,12 @@ label {
     width: calc(30vw - 30px);
 }
 
+.viewMessage span {
+    font-family: "DejaVu Sans Mono", monospace;
+    white-space: pre !important;
+    word-wrap: normal !important;
+}
+
 .hidden {
     display: none;
 }

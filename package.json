@@ -9,5 +9,8 @@
   "scripts": {
     "test_js": "eslint --config configs/.eslintrc.json index.js background.js",
     "test_css": "csslint --quiet --format=compact --config=configs/.csslintrc css"
+  },
+  "dependencies": {
+    "json-format-highlight": "1.0.4"
   }
 }

@@ -1,6 +1,7 @@
 {
     "ignore": [
         "ids",
-        "box-model"
+        "box-model",
+        "important"
     ]
 }

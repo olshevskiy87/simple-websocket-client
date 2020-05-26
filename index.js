@@ -40,6 +40,15 @@ const STG_MSGS_NUM_KEY = 'ext_swc_msgs_num';
 
 let lastMsgsNumCur = MAX_LINES_COUNT;
 
+const JSONColorScheme = {
+    keyColor: 'black',
+    numberColor: 'blue',
+    stringColor: 'green',
+    trueColor: 'firebrick',
+    falseColor: 'firebrick',
+    nullColor: 'gray',
+};
+
 const isBinaryTypeArrayBuffer = function () {
     return binaryType.val() === 'arraybuffer';
 };
@@ -196,10 +205,12 @@ const messageClickHandler = function (event) {
     } catch (e) {
         console.error(`could not parse json: ${e.message}`);
     }
+    const colorizedJSON = jsonFormatHighlight(dataDecoded, JSONColorScheme);
+    if (colorizedJSON === 'undefined') {
+        return;
+    }
     showViewMessagePanel();
-    viewMessage.text(
-        JSON.stringify(dataDecoded, null, 2),
-    );
+    viewMessage.html(colorizedJSON);
 
     messages.find('pre').each(function () {
         $(this).css('background-color', '#fff');
