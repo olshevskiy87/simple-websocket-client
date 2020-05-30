@@ -86,10 +86,11 @@ label {
 }
 
 #sendMessage {
-    height: 2em;
+    height: 40px;
     line-height: 150%;
     min-width: 300px;
     padding: 0 3px;
+    width: 600px;
 }
 
 #messages {
