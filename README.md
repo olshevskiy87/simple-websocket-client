@@ -27,5 +27,5 @@ This software is released under the MIT License, see LICENSE.txt.
 [1]: https://img.shields.io/badge/License-MIT-yellow.svg
 [2]: https://opensource.org/licenses/MIT
 [3]: https://img.shields.io/github/release/olshevskiy87/simple-websocket-client.svg
-[4]: https://img.shields.io/chrome-web-store/rating/gobngblklhkgmjhbpbdlkglbhhlafjnh.svg
+[4]: https://img.shields.io/chrome-web-store/users/gobngblklhkgmjhbpbdlkglbhhlafjnh
 [5]: https://github.com/olshevskiy87/simple-websocket-client/workflows/Node.js%20CI/badge.svg
