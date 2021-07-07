@@ -24,6 +24,7 @@ let connectButton;
 let disconnectButton;
 let sendButton;
 let clearMsgButton;
+let parseURLButton = '';
 
 const MAX_LINES_COUNT = 1000;
 const STG_URL_HIST_KEY = 'ext_swc_url_history';
@@ -204,6 +205,7 @@ const messageClickHandler = function (event) {
         );
     } catch (e) {
         console.error(`could not parse json: ${e.message}`);
+        return;
     }
     const colorizedJSON = jsonFormatHighlight(dataDecoded, JSONColorScheme);
     if (colorizedJSON === 'undefined') {
@@ -409,6 +411,37 @@ const favAddButtonOnClick = function () {
     updateSelect(true);
 };
 
+const parseURLButtonOnClick = function () {
+    const urlRaw = window.prompt('enter ws connection URL');
+    if (!urlRaw) {
+        return;
+    }
+    let url = null;
+    try {
+        url = new URL(urlRaw);
+    } catch (e) {
+        alert(`could not parse URL: ${e.message}`);
+        return;
+    }
+    serverSchema.val(url.protocol.replace(':', ''));
+    let host = url.host.trim();
+    if (url.port) {
+        host = host.replace(new RegExp(`:${url.port}$`), '');
+    }
+    serverHost.val(host);
+    serverPort.val(url.port);
+    let path = url.pathname.trim();
+    if (path.indexOf('/') === 0) {
+        path = path.replace(/^\/+/, '');
+    }
+    serverPath.val(path);
+    let params = url.search.trim();
+    if (params.indexOf('?') === 0) {
+        params = params.replace(/^\?+/, '');
+    }
+    serverParams.val(params);
+};
+
 const connectButtonOnClick = function () {
     if (wsIsAlive()) {
         close();
@@ -461,6 +494,7 @@ const init = function () {
     clearMsgButton = $('#clearMessage');
     showMsgTsMilliseconds = $('#showMsgTsMilliseconds');
     viewMessageChk = $('#viewMessageChk');
+    parseURLButton = $('#parseURLButton');
 
     messages = $('#messages');
     viewMessage = $('#viewMessage');
@@ -519,6 +553,8 @@ const init = function () {
     favDelButton.click(favDelButtonOnClick);
     favApplyButton.click(applyCurrentFavorite);
     favAddButton.click(favAddButtonOnClick);
+
+    parseURLButton.click(parseURLButtonOnClick);
 
     connectButton.click(connectButtonOnClick);
     disconnectButton.click(close);
