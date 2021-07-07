@@ -23,6 +23,7 @@
         "max-len": ["error", {"code": 120, "comments": 120}],
         "guard-for-in": "off",
         "no-restricted-syntax": "off",
-        "no-undef": "off"
+        "no-undef": "off",
+        "no-alert": "off"
     }
 }
