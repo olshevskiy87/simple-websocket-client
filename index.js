@@ -17,12 +17,14 @@ let delButton = '';
 let showMsgTsMilliseconds = '';
 let connectionStatus;
 let sendMessage;
+let oldSendMessageVal = '';
 let messages;
 let viewMessage;
 let viewMessageChk;
 let connectButton;
 let disconnectButton;
 let sendButton;
+let sendButtonHelp;
 let clearMsgButton;
 let parseURLButton = '';
 
@@ -165,8 +167,8 @@ const onOpen = function () {
     console.log(`OPENED: ${getUrl()}`);
     connectionStatus.css('color', '#009900');
     connectionStatus.text('OPENED');
-    sendMessage.removeAttr('disabled');
     sendButton.removeAttr('disabled');
+    sendButtonHelp.removeClass('disabledText');
     lastMsgsNum.attr('disabled', 'disabled');
 };
 
@@ -261,8 +263,8 @@ const close = function () {
 
     enableUrl();
     disableConnectButton();
-    sendMessage.attr('disabled', 'disabled');
     sendButton.attr('disabled', 'disabled');
+    sendButtonHelp.addClass('disabledText');
     lastMsgsNum.removeAttr('disabled');
 };
 
@@ -453,13 +455,24 @@ const sendButtonOnClick = function () {
     const msg = sendMessage.val();
     addMessage(msg, 'SENT');
     ws.send(msg);
-    localStorage.setItem(STG_REQUEST_KEY, sendMessage.val());
+    localStorage.setItem(STG_REQUEST_KEY, msg);
 };
 
 const sendMessageOnKeydown = function (e) {
-    if (e.which === 13 && e.ctrlKey) {
+    if (wsIsAlive()
+        && e.which === 13 && e.ctrlKey
+    ) {
         sendButton.click();
     }
+};
+
+const sendMessageOnChange = function () {
+    const msg = sendMessage.val();
+    if (msg === oldSendMessageVal) {
+        return;
+    }
+    oldSendMessageVal = msg;
+    localStorage.setItem(STG_REQUEST_KEY, msg);
 };
 
 const showMsgTsMillisecondsOnChange = function () {
@@ -491,6 +504,7 @@ const init = function () {
     connectButton = $('#connectButton');
     disconnectButton = $('#disconnectButton');
     sendButton = $('#sendButton');
+    sendButtonHelp = $('#sendButtonHelp');
     clearMsgButton = $('#clearMessage');
     showMsgTsMilliseconds = $('#showMsgTsMilliseconds');
     viewMessageChk = $('#viewMessageChk');
@@ -560,7 +574,9 @@ const init = function () {
     disconnectButton.click(close);
 
     sendButton.click(sendButtonOnClick);
-    sendMessage.keydown(sendMessageOnKeydown);
+    sendMessage
+        .keydown(sendMessageOnKeydown)
+        .on('change', sendMessageOnChange);
 
     clearMsgButton.click(clearLog);
     filterMessage.on('input', onFilter);

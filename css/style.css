@@ -93,6 +93,10 @@ label {
     width: 600px;
 }
 
+.disabledText {
+    color: #aaa;
+}
+
 #messages {
     background-color: #fff;
     border: 1px dotted #777;
