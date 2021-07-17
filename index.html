@@ -44,9 +44,6 @@
             <span id="connectionStatus">CLOSED</span>
         </div>
     </fieldset>
-    <div class="option_row">
-        <label>Show last&nbsp;</label><input type="text" id="lastMsgsNum"><label>&nbsp;messages (default: 1000)</label>
-    </div>
     <fieldset>
         <legend>Request</legend>
         <div>
@@ -58,6 +55,9 @@
         </div>
     </fieldset>
     <div class="option_row">
+        <label>Show last&nbsp;<input type="text" id="lastMsgsNum">&nbsp;messages (default: 1000)</label>
+    </div>
+    <div class="option_row">
         <label>Show message timestamp milliseconds:&nbsp;<input type="checkbox" id="showMsgTsMilliseconds"></label>
     </div>
     <div class="option_row">
@@ -67,7 +67,7 @@
         <legend>
             Message Log
             <button id="clearMessage">Clear</button>&nbsp;
-            <label>Filter&nbsp;</label><input type="text" id="filterMessage">
+            <label>Filter&nbsp;<input type="text" id="filterMessage"></label>
         </legend>
         <div id="messages"></div>
         <div id="viewMessage" class="viewMessage hidden"></div>
