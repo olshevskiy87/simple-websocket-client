@@ -13,7 +13,8 @@ let favorites = '';
 let favApplyButton = '';
 let favDelButton = '';
 let favAddButton = '';
-let delButton = '';
+let historyDelButton = '';
+let historyDelAllButton = '';
 let showMsgTsMilliseconds = '';
 let connectionStatus;
 let sendMessage;
@@ -388,13 +389,21 @@ const urlHistoryOnChange = function () {
     close();
 };
 
-const delButtonOnClick = function () {
+const historyDelButtonOnClick = function () {
     const url = urlHistory.val();
     const urlHist = getDataFromStorage();
     if (url in urlHist) {
         delete urlHist[url];
     }
     localStorage.setItem(STG_URL_HIST_KEY, JSON.stringify(urlHist));
+    updateSelect();
+};
+
+const historyDelAllButtonOnClick = function () {
+    if (!confirm('Are you sure you want to clear URL history?')) {
+        return;
+    }
+    localStorage.setItem(STG_URL_HIST_KEY, '{}');
     updateSelect();
 };
 
@@ -497,7 +506,8 @@ const init = function () {
     connectionStatus = $('#connectionStatus');
     sendMessage = $('#sendMessage');
 
-    delButton = $('#delButton');
+    historyDelButton = $('#historyDelButton');
+    historyDelAllButton = $('#historyDelAllButton');
     favApplyButton = $('#favApplyButton');
     favDelButton = $('#favDelButton');
     favAddButton = $('#favAddButton');
@@ -562,7 +572,8 @@ const init = function () {
     serverPath.keydown(urlKeyDown);
     serverParams.keydown(urlKeyDown);
 
-    delButton.click(delButtonOnClick);
+    historyDelButton.click(historyDelButtonOnClick);
+    historyDelAllButton.click(historyDelAllButtonOnClick);
 
     favDelButton.click(favDelButtonOnClick);
     favApplyButton.click(applyCurrentFavorite);
