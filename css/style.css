@@ -45,6 +45,14 @@ label {
     word-wrap: normal !important;
 }
 
+.viewMessageBody {
+    background-color: #fff;
+    font-family: "DejaVu Sans Mono", monospace;
+    line-height: 150%;
+    white-space: pre;
+    word-wrap: normal;
+}
+
 .hidden {
     display: none;
 }

@@ -213,8 +213,18 @@ const messageClickHandler = function (event) {
     if (colorizedJSON === 'undefined') {
         return;
     }
-    showViewMessagePanel();
-    viewMessage.html(colorizedJSON);
+    if (event.altKey) {
+        hideViewMessagePanel();
+        const msgWindow = window.open('', '_blank');
+        if (msgWindow) {
+            msgWindow.document.write(`<html><head><link rel="stylesheet" type="text/css" href="css/style.css"/></head><body class=viewMessageBody>${colorizedJSON}</body></html>`);
+        } else {
+            alert('Please, allow pop-up windows for this site');
+        }
+    } else {
+        showViewMessagePanel();
+        viewMessage.html(colorizedJSON);
+    }
 
     messages.find('pre').each(function () {
         $(this).css('background-color', '#fff');
